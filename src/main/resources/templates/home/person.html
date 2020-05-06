@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- 引入外部文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <title>个 人 中 心</title>
+</head>
+
+<body>
+    <div th:replace="~{header :: myheader}"></div>
+
+    <main>
+        <section class="py-5 px-3">
+            <!-- 栅格系统 -->
+            <div class="container-fluid">
+                <div class="row pl-5">
+
+                    <!-- 用户列表 -->
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ml-4">
+                        <div class="row rounded-5 mx-5 " style="background-color: lightblue;">
+                            <svg class="bi bi-list-ul ml-4  pt-1" width="2em" height="2em" viewBox="0 0 13 13"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="mx-2"> 个 人 信 息</h3>
+
+                        </div>
+                        <div class="mx-5">
+                            <hr />
+                        </div>
+
+                        <!-- 用户名 -->
+                        <form class="form-inline mx-5" name="modifyName" id="modifyName">
+                            <!-- <div class="form-group mb-2">
+                              <label for="staticEmail2" class="sr-only">Email</label>
+                              <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="邮 箱">
+                            </div> -->
+                            <span class="text-muted">用 户 名 ：</span>
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="username" class="sr-only">username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="username"
+                                    th:value="${session.user.username}">
+                            </div>
+                            <!--  th:onclick="validateRule()" -->
+                            <button class="btn btn-outline-info mb-2" style="float:right" onclick="modifyUsername()">修
+                                改</button>
+                        </form>
+
+                        <!-- 邮箱 -->
+                        <form class="form-inline mx-5">
+                            <span class="text-muted col-form-label">邮 箱 ：</span>
+                            <div class="form-group mx-sm-3 mb-2">
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control-plaintext mx-sm-4 mt-2" id="mail"
+                                        name="mail" value="我的邮箱" th:value="${session.user.mailBox}" minlength="20">
+                                </div>
+                            </div>
+                            <!-- act th:if="${session.user == null}"-->
+                            <div th:if="${session.user.act == 'no' }">
+                                <!-- <a th:href="@{/home/person/mailVerifi}"> -->
+                                <button class="btn btn-outline-info mb-1" style="float:right" id="openMail"
+                                    name="openMail" onclick="mailVerifi()">
+                                    激 活
+                                </button>
+                                <!-- </a> -->
+                            </div>
+                            <div th:if="${session.user.act == 'yes' }">
+                                <button class="btn btn-outline-info mb-1" style="float:right" id="closeMail"
+                                    name="closeMail" onclick="noMailVerifi()">
+                                    取消激活
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <!-- 提问箱状态 -->
+                        <form class="form-inline mx-5">
+                            <span class="text-muted col-form-label">提 问 箱 ：</span>
+                            <div class="form-group mx-sm-3 mb-2">
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control-plaintext mt-2" id="mail" name="mail"
+                                        value="提问箱状态" th:value="${session.user.openSta}">
+                                </div>
+                            </div>
+                            <div th:if="${session.user.act == 'no' }">
+                                <button type="text" class="btn btn-outline-info mb-1 pt-1" style="float:right" disabled>
+                                    开 启
+                                </button>
+                            </div>
+                            <!-- act th:if="${session.user == null}"-->
+                            <div th:if="${session.user.act == 'yes' }">
+                                <button type="submit" class="btn btn-outline-info mb-1 pt-1" style="float:right"
+                                    th:if="${session.user.openSta == 'close' }" id="openMail" name="openMail"
+                                    onclick="OCMail()">
+                                    开 启
+                                </button>
+                                <button type="submit" class="btn btn-outline-info mb-1 pt-1" style="float:right"
+                                    th:if="${session.user.openSta == 'open' }" id="closeMail" name="closeMail"
+                                    onclick="OCMail()">
+                                    关 闭
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- 用户状态 -->
+                        <form class="mx-5">
+                            <div class="form-group row">
+                                <label for="userstate" class="text-muted col-sm-3 col-form-label">用 户 状 态 ：</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly class="form-control-plaintext" id="userstate"
+                                        name="userstate" value="用 户 状 态" th:value="${session.user.prohibit}">
+                                    <!-- .form-control-plaintext 只读文本 -->
+                                    <!-- <input type="text" readonly class="form-control-plaintext" id="userstate"
+                                        th:if="${session.user.prohibit == 'no'}"
+                                        name="userstate" value="用 户 状 态" th:value="活 跃">
+                                    <input type="text" readonly class="form-control-plaintext" id="userstate"
+                                        th:if="${session.user.prohibit == 'yes'}"
+                                        name="userstate" value="用 户 状 态" th:value="禁 用"> -->
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- 按钮 -->
+                        <div class="mx-5">
+                            <a th:href="@{/home/person/modifyMail}">
+                                <button type="button" class="btn btn-outline-danger mr-2">修 改 邮 箱</button>
+                            </a>
+                            <a th:href="@{/home/person/modifyPassword}">
+                                <button type="button" class="btn btn-outline-warning">修 改 密 码</button>
+                            </a>
+                        </div>
+
+                    </div>
+
+
+                    <!-- 用户排行 -->
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5 pr-3 mr-5 "
+                        style="color: steelblue;">
+                        <!-- <h4 class="ml-2" style="font-size: xx-small;">放 头 像 吧</h4> -->
+                        <!-- 图片 -->
+                        <div class="row">
+                            <!--  th:src="|@{/pic}${session.user.picName}|" -->
+                            <img th:src="@{'/pic/'+${session.user.picName}}" class="img-circle img-thumbnail"
+                                style="width:200px;height:200px;border-radius: 50%;" />
+                        </div>
+                        <!-- 上传按钮 -->
+                        <div class="row">
+                            <button class="btn btn-outline-info mx-5 mt-4" data-toggle="modal"
+                                data-target="#myModal">上传头像
+                            </button>
+                        </div>
+
+                        <!-- 弹出框 -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <!--content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                    </div>
+                                    <!--body-->
+                                    <div class="modal-body">
+                                        <form action="/post/upload" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <input type="file" name="file_img" id="file_img"
+                                                    accept="image/jpg,image/jpeg,image/png,image/bmp" /><br />
+                                                <input type="submit" value="文件上传"
+                                                    class="btn btn-outline-warning" /><br />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+
+                    </div><!-- /.modal -->
+                </div>
+
+            </div>
+            </div>
+            </div>
+
+        </section>
+    </main>
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo
+    </footer>
+
+    <script type="text/javascript">
+        function modifyUsername() {
+            var inputItem = document.getElementById('username')
+            inputItem.onblur = function () {
+                console.log(inputItem.value)
+                if (!inputItem.value.trim()) {
+                    alert('用户名不能为空')
+                    inputItem.value = ''
+                    inputItem.focus()
+                }
+            }
+            window.location.reload();
+            var username = $('#username').val();
+            $.ajax({
+                url: encodeURI("/home/person/modifyUsername"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "newName": username,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("修改成功!");
+                        window.location.reload();
+                    } else if (result.code == 1) {
+                        //layer.msg("修改失败");
+                        alert("用户名已存在！");
+                    } else if (result.code == 2) {
+                        alert("修改失败！");
+                    } else if (result.code == 3) {
+                        alert("用户名不可为空！");
+                    }
+
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+        function mailVerifi() {
+            $.ajax({
+                url: encodeURI("/home/person/mailVerifi"),
+                type: "Post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+
+                },
+                success: function (result) {
+                    if (result.code == 200) {
+                        alert("邮件已发送，请注意查收！");
+                    }
+                    else {
+                        alert("false");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+        function noMailVerifi() {
+            $.ajax({
+                url: encodeURI("/home/person/noMailVerifi"),
+                type: "Post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+
+                },
+                success: function (result) {
+                    if (result.code == 200) {
+                        alert("修改成功");
+                        window.location.href = "/home/person";
+                    } else if (result.code == 500) {
+                        alert("邮件还未激活");
+                    } else if (result.code == 404) {
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+        function OCMail() {
+            $.ajax({
+                url: encodeURI("/home/person/OCMail"),
+                type: "Post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+
+                },
+                success: function (result) {
+                    if (result.code == 200) {
+                        alert("修改成功");
+                        window.location.href = "/home/person";
+                    } else if (result.code == 500) {
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+
+        //图片上传限制：
+        //图片上传的change 事件
+        $("#file_img").change(function (e) {
+            //上传钱检测文件的长度如果超过指定的张数的话就要隐藏上传的按钮
+
+            // console.log("1")
+            let files = e.target.files || e.dataTransfer.files;
+            if (!files.length) {
+                return;
+            };
+            // 检测图片
+            // console.log(files)
+            //验证的 图片的大写和格式的  函数
+            function validateImg(file, ipt) {
+                let reg = /\.(jpg|png|jpeg)$/ig;
+                let sizeMB = file.size / (1024 * 1024);
+                // 验证文件是否是图片
+                if (!reg.test(file.name)) {
+                    alert('请选择jpg,png,jpeg文件上传');
+                    ipt.value = '';
+                    return false;
+                }
+                // 验证图片大小是否超过5M
+                if (sizeMB > 3) {
+                    alert('请选择3M以下的图片');
+                    ipt.value = '';
+                    return false;
+                }
+                return true;
+            }
+            if (validateImg(files[0], e.currentTarget)) {
+                var fileData = files[0];
+                // console.log(fileData)
+                let formData = new FormData();
+                // console.log(fileData)
+                formData.append('files', fileData);
+                formData.append('token', token);
+
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', "upload/img");
+                xhr.send(formData);
+                //uploadFile(formData, e.currentTarget);
+            }
+            else {
+                return;
+            }
+        });
+
+
+        
+    </script>
+
+
+</body>
+
+</html>

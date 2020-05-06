@@ -1,0 +1,141 @@
+# 项目相关配置
+Question_Box:
+  # 名称
+  name: question-box
+  # 版本
+  version: 1.0.0
+  # 版权年份
+  copyrightYear: 2020
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/Question_Box/uploadPath，Linux配置 /home/Question_Box/uploadPath）
+  profile: G:/Question_Box/uploadPath
+  # 获取ip地址开关
+  addressEnabled: true
+  
+Store:
+  root:
+    path: G:/dataWEST05
+
+#端口号配置
+server:
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # 存放Tomcat的日志目录
+    basedir: G:/tomcat
+    accesslog: 
+        # 开启日志记录
+        enabled: true
+        # 访问日志存放目录
+        directory: logs
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+  
+spring:
+#模板引擎配置
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    # 禁用缓存 ---改动html即时刷新
+    cache: false
+    servlet:
+      content-type: text/html
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  # 文件上传
+  servlet:
+     multipart:
+       # 单个文件大小
+       max-file-size:  5MB
+       # 设置总上传的文件大小
+       max-request-size:  10MB
+  #。。。。
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  #QQ邮箱配置
+  mail:
+    #发送邮件服务器
+    host: smtp.qq.com
+    #发送邮件的邮箱地址
+    username: 1171392006@qq.com
+    #客户端授权码，不是邮箱密码，这个在qq邮箱设置里面自动生成的indqbaqvfoyafjjg
+    password: dwecmstwvpwobafc
+    #端口号465或587
+    properties.mail.smtp.port: 465
+    # 发送邮件的地址，和上面username一致
+    from: 1171392006@qq.com
+    #可以任意
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+    
+#静态文件配置
+  resources:
+    static-locations: classpath:/static,classpath:/META-INF/resources,classpath:/templates/
+#jdbc配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/question_box?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Etc/GMT-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#mybatis配置
+mybatis:
+#映射文件路径
+  mapper-locations: classpath:mapper/*.xml
+#模型所在的包名
+  type-aliases-package: org.boot.mine.models
+  
+# Shiro
+shiro:
+  user:
+    # 登录地址
+    loginUrl: /login
+    # 权限认证失败地址
+    unauthorizedUrl: /unauth
+    # 首页地址
+    indexUrl: /index
+    # 验证码开关
+    captchaEnabled: false
+    # 验证码类型 char 
+    captchaType: char
+  cookie:
+    # 设置Cookie的域名 默认空，即当前访问的域名
+    domain: 
+    # 设置cookie的有效访问路径
+    path: /
+    # 设置HttpOnly属性
+    httpOnly: true
+    # 设置Cookie的过期时间，天为单位
+    maxAge: 30
+  session:
+    # Session超时时间，-1代表永不过期（默认30分钟）
+    expireTime: 30
+    # 同步session到数据库的周期（默认1分钟）
+    dbSyncPeriod: 1
+    # 相隔多久检查一次session的有效性，默认就是10分钟
+    validationInterval: 10
+    # 同一个用户最大会话数，比如2的意思是同一个账号允许最多同时两个人登录（默认-1不限制）
+    maxSession: -1
+    # 踢出之前登录的/之后登录的用户，默认踢出之前登录的用户
+    kickoutAfter: false
+
+# 防止XSS攻击（暂无）
+xss: 
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）例如：通知公告
+  excludes: /system/notice/*
+  # 匹配链接 哪些可以匹配xss攻击
+  urlPatterns: /system/*,/monitor/*,/tool/*
+  
+

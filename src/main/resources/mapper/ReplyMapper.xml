@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.boot.mine.dao.ReplyMapper">
+  <resultMap id="BaseResultMap" type="org.boot.mine.models.Reply">
+    <constructor>
+      <idArg column="RID" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="QID" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Content" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ReTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="role" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ansName" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  
+	<select id="selectReplyByQID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from reply
+	    where QID=#{QID}
+	</select>
+	
+	<insert id="insertReply" parameterType="Reply">
+ 		insert into reply
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+	     	<if test="RID != null and RID != 0">RID,</if>
+ 			<if test="QID != null and QID != ''">QID,</if>
+ 			<if test="content != null and content != ''">Content,</if>
+ 			<if test="reTime != null">ReTime,</if>
+ 			<if test="role != null and role != ''">role,</if>
+ 			<if test="ansName != null and ansName != ''">ansName,</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	    	<if test="RID != null and RID != 0">#{RID},</if>
+ 			<if test="QID != null and QID != ''">#{QID},</if>
+ 			<if test="content != null and content != ''">#{content},</if>
+ 			<if test="reTime != null">#{reTime},</if>
+ 			<if test="role != null and role != ''">#{role},</if>
+ 			<if test="ansName != null and ansName != ''">#{ansName},</if>
+	    </trim>
+	</insert>
+	
+	<delete id="deleteReplyByRID" parameterType="java.lang.Integer">
+	    delete from reply
+	    where RID = #{RID,jdbcType=INTEGER}
+  	</delete>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reply
+    where RID = #{RID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.boot.mine.models.Reply">
+    insert into reply (RID, QID, Content, 
+      ReTime)
+    values (#{RID,jdbcType=INTEGER}, #{QID,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{reTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.boot.mine.models.Reply">
+    update reply
+    set QID = #{QID,jdbcType=INTEGER},
+      Content = #{content,jdbcType=VARCHAR},
+      ReTime = #{reTime,jdbcType=TIMESTAMP}
+    where RID = #{RID,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select RID, QID, Content, ReTime
+    from reply
+    where RID = #{RID,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RID, QID, Content, ReTime
+    from reply
+  </select>
+</mapper>

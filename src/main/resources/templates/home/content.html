@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- 引入外部文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <title th:text="${question.title}"></title>
+</head>
+
+<body>
+    <div th:replace="~{header :: myheader}"></div>
+	
+    <main>
+    
+        <section class="py-5">
+            <!-- 栅格系统 -->
+            <div class="container-fluid">
+                <div class="row pl-2">
+
+                    <!-- 用户列表 -->
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ml-5">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row rounded-5 pt-1" style="background-color: lightblue;">
+                                <svg class="bi bi-bookmarks-fill ml-4 pt-1" width="2em" height="2em" viewBox="0 0 16 16"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 4a2 2 0 012-2h6a2 2 0 012 2v12l-5-3-5 3V4z"
+                                        clip-rule="evenodd" />
+                                    <path d="M14 14l-1-.6V2a1 1 0 00-1-1H4.268A2 2 0 016 0h6a2 2 0 012 2v12z" />
+                                </svg>
+                                <h3 class="mx-2">
+                                    <span th:text="${question.title}"></span>
+                                </h3>
+                            </div>
+                            <span class="text-desc mt-2" style="font-size: 14px;color: #999;">
+                                发布时间：<span th:text="${question._strTime}"></span>
+                            </span>
+                            <hr />
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <ul class="list-unstyled col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${list != 0}">
+                                <li  class="media my-4 ml-2 row" th:each="reply: ${list}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading ">
+                                            <h3 class="panel-title" style="font-size: 12px;color: #999;">
+                                                <span th:if="${reply.role == '1'}" th:text="${reply.ansName}+'：'">回答者名字：</span>
+                                                <span th:if="${reply.role == '2'}" th:text="(匿名用户)"></span>
+                                                <br>
+                                                <span th:text="'回复时间：'  +${reply._strTime}">回复时间：</span>
+                                                <br>
+                                            </h3>
+                                        </div>
+                                        <div  class="panel-body"  th:text="${reply.content}">
+                                            这是一个基本的面板
+                                        </div>
+                                        
+                                    </div>
+                                </li>
+                            </ul>
+    
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span th:if="${question.UIDans == session.user.UID}" th:text="'TO: '  + '匿名用户' "></span>
+                                <span th:if="${question.UIDans != session.user.UID}" th:text="'TO: '  +${question.ansName}+'  (匿 名 发 表)'"></span>
+                                <textarea class="form-control" rows="4" id="content" name="content"></textarea>
+                                <button class="btn btn-outline-info mt-3" style="float:right"
+                                    th:onclick="reply([[${question.QID}]],[[${session.user.UID}]],[[${session.user.username}]])">回 复
+                                </button>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                    <!-- 用户排行 -->
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5"
+                        style="color: steelblue;font-style:inherit;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div th:if="${question.UIDans == session.user.UID}">
+                                <h4 class="ml-2">选 项</h4>
+                                <div class="btn-group-vertical">
+                                    <div>
+                                        <button type="text" class="btn btn-info btn-lg" style="float:right"
+                                            th:text="${ isBlack == 0 }? ' 拉 黑 ': '取消拉黑'"
+                                            th:onclick="isBlack([[${question.QID}]],[[${question.UIDans}]])">
+                                        </button>
+                                    </div>
+                                    <br />
+                                    <div th:if="${isReport != 0 }">
+                                        <button type="text" class="btn btn-secondary btn-lg" style="float: left;" disabled>
+                                            举 报
+                                        </button>
+                                    </div>
+                                    <div th:if="${isReport == 0 }">
+                                        <!-- <button type="text" class="btn btn-info btn-lg" style="float: left;"
+                                            th:onclick="isReport([[${question.QID}]],[[${question.UIDans}]])"> 举 报
+                                        </button> -->
+                                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                                            data-target="#isReport" style="float: left;"> 举 报</button>
+    
+                                        <div class="modal fade" id="isReport" tabindex="-1" role="dialog"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">举报此用户</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form>
+                                                            <div class="form-group">
+                                                                <label for="reason" class="col-form-label">Message:</label>
+                                                                <textarea class="form-control" id="reason"></textarea>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary"
+                                                            th:onclick="isReport([[${question.QID}]],[[${question.UIDans}]])">Send
+                                                            message
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </section>
+    </main>
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo
+    </footer>
+	
+    <script type="text/javascript">
+ 
+        function isBlack(QID, UIDans) {
+            $.ajax({
+                url: encodeURI("/home/isBlack"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "QID": QID,
+                    "UIDans": UIDans,
+                    "isBlack": [[${ isBlack }]],
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("修改成功!");
+                        window.location.reload();
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+
+
+        //用:模组! 
+        function isReport(QID, UIDans) {
+            var reason = $('#reason').val();
+            $.ajax({
+                url: encodeURI("/home/isReport"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: true,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "QID": QID,
+                    "UIDans": UIDans,
+                    "reason": reason,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("举报成功!");
+                        $('#isReport').modal('hide');
+                        window.location.reload();
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("举报失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+        function reply(QID, UIDco, usernamrCo) {
+            var content = $('#content').val();
+            $.ajax({
+                url: encodeURI("/home/reply"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: true,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "QID": QID,
+                    "UIDco": UIDco,
+                    "usernamrCo": usernamrCo,
+                    "UIDans":[[${ question.UIDans }]],
+                    "content":content,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("回复成功!");
+                        window.location.reload();
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("回复失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+
+</html>

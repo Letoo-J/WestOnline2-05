@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- 引入外部文件! -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <title th:text="管理员中心"></title>
+</head>
+
+<body>
+    <header>
+        <!------------------------------------------------------------------------------------->
+        <!-- alert-info：显示info颜色。  mb-0：没有下边框。
+        rounded-0：显示方角，否则有圆角。  alert-dismissible：表示可以消失/隐藏  fade：渐变。 show：显示-->
+        <div class="alert alert-info text-center mb-0 rounded-2 alert-dismissible fade show">
+            Welcome!
+            <!-- close：关闭按钮。   data-dismiss="alert"：js脚本实现--关闭alert。  &times;：❌-->
+            <button class="close" data-dismiss="alert">&times;</button>
+        </div>
+
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <!-- 可写为logo： -->
+                <a class="navbar-brand" href="#">提问箱首页</a>
+                <!-- 汉堡按钮：navbar-toggler：开关。  data-toggle="collapse"：会收缩/伸展-->
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/home">发现 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">我的提问</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">收到的问题</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="发现用户"
+                                    aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 下拉列表-->
+                <div class="nav navbar-nav navbar-expand-lg">
+                    <li><a href="/register"><button class="btn btn-outline-info my-2 my-sm-0 mx-2">注册</button></a></li>
+                    <li><a href="/login" th:if="${session.user == null}"><button
+                                class="btn btn-outline-info my-2 my-sm-0 mx-2">登入</button></a></li>
+                    <li class="nav-item dropdown" th:if="${session.user != null}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret" th:text="${session.user.username}"></span>
+                            <!-- <span class="caret" th:if="${session.user == null}" th:text="未登入">
+                                    
+                                </span> -->
+
+                        </a>
+                        <ul class="dropdown-menu mr-4" aria-labelledby="navbarDropdown" th:if="${session.user != null}">
+                            <a class="dropdown-item" href="/home/person">个人中心</a>
+                            <a class="dropdown-item" href="#">公告</a>
+                            <a class="dropdown-item" href="#">消息</a>
+                            <a class="dropdown-item" href="#">黑名单</a>
+                            <a class="dropdown-item" href="#">退出</a>
+                        </ul>
+
+                    </li>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="py-5">
+            <!-- 栅格系统 -->
+            <div class="class mx-5 px-5 col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                <ul class="nav nav-tabs mx-3 px-3" id="myTab" role="tablist">
+                    <!-- role="tab" -->
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">用户总览</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                            aria-controls="profile" aria-selected="false">举报管理</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                            aria-controls="contact" aria-selected="false">发布公告</a>
+                    </li>
+                </ul>
+
+                <!-- role="tabpanel" -->
+                <div class="tab-content mx-3 px-3" id="myTabContent">
+
+                    <!-- 用户列表 -->
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="panel panel-default">
+                            <div class="row">
+                                <div class="panel-heading my-4 mx-4">用 户 列 表</div>
+                                <form class="form-inline my-2 my-lg-0" style="float: right;" method="Get"
+                                    action="/admin/searchUser">
+                                    <input class="form-control mr-sm-2" type="search" placeholder="查找用户"
+                                        aria-label="Search" id="name" name="name">
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
+                                </form>
+                            </div>
+                            <table class="table table-striped">
+                                <THEAD>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户名</th>
+                                        <th>激活状态</th>
+                                        <th>封禁状态</th>
+                                        <th>问题数</th>
+                                        <th>提问数</th>
+                                        <th>回复数</th>
+                                        <th style="float: inherit;">操作</th>
+                                    </tr>
+                                </THEAD>
+                                <TBODY>
+                                    <tr th:each="user:${list}">
+                                        <td th:text="${user.UID}"></td>
+                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.act}"></td>
+                                        <td th:text="${user.prohibit}"></td>
+                                        <td th:text="${user.questions}"></td>
+                                        <td th:text="${user.quiz}"></td>
+                                        <td th:text="${user.replies}"></td>
+                                        <!-- <td><a th:href="${'/del/'+user.userId}">delete</a></td> -->
+                                        <td>
+                                            <button type="text" class="btn btn-outline-warning mr-5" style="float:right"
+                                                th:text="${user.prohibit=='no'}? '封 禁': '解 封'"
+                                                th:onclick="isProhibit([[${user.prohibit}]],[[${user.UID}]])">
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                </TBODY>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 举报管理 -->
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="panel panel-default">
+                            <div class="row">
+                                <div class="panel-heading my-4 mx-4">举 报 管 理</div>
+                                <!-- <form class="form-inline my-2 my-lg-0" style="float: right;" method="POST"
+                                    action="@{/admin/searchUser}">
+                                    <input class="form-control mr-sm-2" type="search" placeholder="查找用户"
+                                        aria-label="Search" id="name" name="name">
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
+                                </form> -->
+                            </div>
+                            <table class="table table-striped">
+                                <THEAD>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>举报人</th>
+                                        <th>被举报用户</th>
+                                        <th>举报时间</th>
+                                        <th>举报题号</th>
+                                        <th>举报理由</th>
+                                        <th style="float: inherit;">状态</th>
+                                    </tr>
+                                </THEAD>
+                                <TBODY>
+                                    <tr th:each="report:${list2}">
+                                        <td th:text="${report.rno}"></td>
+                                        <td th:text="${report.UIDre}"></td>
+                                        <td th:text="${report.UIDby}"></td>
+                                        <td th:text="${report._strTime}"></td>
+                                        <td th:text="${report.QIDreport}"></td>
+                                        <td th:text="${report.reason}"></td>
+                                        <!-- <td><a th:href="${'/del/'+user.userId}">delete</a></td> -->
+                                        <td>
+
+                                            <div th:if="${report.handle=='yes'}">
+                                                <button type="text" class="btn btn-outline-info mb-1 pt-1"
+                                                    style="float:right" disabled>
+                                                    已 处 理
+                                                </button>
+                                            </div>
+                                            <div th:if="${report.handle=='no'}">
+                                                <button type="text" class="btn btn-outline-info mb-1 pt-1"
+                                                    style="float:right" disabled>
+                                                    已 忽 略
+                                                </button>
+                                            </div>
+                                            <div th:if="${report.handle=='ing'}">
+                                                <form>
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-auto my-1">
+                                                            <label class="mr-sm-2 sr-only"
+                                                                for="inlineFormCustomSelect">Preference</label>
+                                                            <select class="custom-select mr-sm-2" id="sta" name="sta">
+                                                                <option value="1">处 理</option>
+                                                                <option value="2">忽 略</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-auto my-1">
+                                                            <button type="submit" class="btn btn-primary"
+                                                                th:onclick="isHandle([[${report.rno}]])">
+                                                                提 交
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </TBODY>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                </div>
+
+            </div>
+
+
+        </section>
+    </main>
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo
+    </footer>
+
+    <script type="text/javascript">
+        function isProhibit(prohibit, UID) {
+            $.ajax({
+                url: encodeURI("/admin/isProhibit"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "prohibit": prohibit,
+                    "UID": UID,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("修改成功");
+                        window.location.reload();
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+
+
+        function isHandle(rno) {
+            var sta = $('#sta').val();
+            $.ajax({
+                url: encodeURI("/admin/isHandle"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "rno": rno,
+                    "sta": sta,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("操作成功");
+                        window.location.reload();
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("操作失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+
+</html>

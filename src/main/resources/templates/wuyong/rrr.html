@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>注 册</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{webjars/bootstrap/4.4.1-1/css/bootstrap.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/none.css}" rel="stylesheet">
+</head>
+
+
+<body class="text-center" background="..img/login-background.jpg">
+<div class="row bg">
+<form class="form-signin" action="dashboard.html">
+    <img class="mb-4" th:src="@{img/favicon.ico}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">请 注 册</h1>
+    
+    <label class="sr-only">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="请输入用户名" required="" autofocus="">
+    
+    <label class="sr-only">Mail</label>
+    <input type="text" class="form-control" id="mail" placeholder="请输入邮箱" required="" autofocus="">
+    
+    <label class="sr-only">Password</label>
+    <input type="password" class="form-control" id="password" placeholder="请输入密码" required="" >
+    
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="register" >注 册</button>
+    <button class="btn btn-success btn-block " helf="register" th:href="@{Boot/register}" target="_blank">立即注册&raquo;</button> 
+	<footer class="text-center text-muted py-4">
+    Copyright @Letoo 2020-04
+  </footer>
+</form>
+	
+</body>
+
+</html>

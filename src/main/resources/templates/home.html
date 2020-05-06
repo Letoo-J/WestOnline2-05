@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS 本地引用-->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" />
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <!-- <link rel="stylesheet" th:href="@{css/bootstrap.css}"> -->
+
+    <script th:src="@{webjars/jquery/3.4.0/jquery.js}"></script>
+    <script src="../static/others/jquery-3.4.1.slim.min.js"></script>
+    <script src="../static/others/popper-1.16.1.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script th:src="@{webjars/bootstrap/4.4.1-1/js/bootstrap.js}"></script>
+
+    <title> 主 页 </title>
+</head>
+
+<body>
+	<!-- thymelesf: 引入 myheader.html代码块！ 
+		<div th:replace="~{header :: myheader}"></div>
+	-->
+	<div th:replace="~{header :: myheader}"></div>
+    
+    <main>
+        <section class="py-5">
+            <!-- 栅格系统 -->
+            <div class="container-fluid">
+                <div class="row pl-2">
+
+                    <!-- 用户列表 -->
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ml-5">
+                        <div class="row rounded-5" style="background-color: lightblue;">
+                            <svg class="bi bi-list-ul ml-4 mt-1" width="2em" height="2em" viewBox="0 0 13 13"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="mx-2 mt-1" > 发 现</h3>
+                        </div>
+                        <hr />
+                        <ul class="list-unstyled">
+                            <li class="media my-4 ml-2 row" th:each="user: ${list}">
+                                <!-- <img src="../static/img/zdtp.jpg" class="media-left mr-3 img-round" 
+                                    style="width: 38px;height: 38px;"> -->
+                                <!-- class="media-object img-circle mr-3" -->
+                                <img class="media-object img-circle mr-3"
+                            		style="width:50px;height:50px;border-radius: 50%;" th:src="@{'/pic/'+${user.picName}}">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1" th:text="${user.username}"></h5>
+                                    <!-- <span class="caret" th:text="${data.user.username}"></span> -->
+                                    <span style="font-size: 12px;color: #999;"
+                                        th:text="'被提问数：'+ ${user.questions} + ' , 回复数：'+${user.replies}">
+                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                    </span>
+                                </div>
+                                <!-- <a th:href="@{/home/question(uidans=${user.UID})}"> -->
+                                <a th:href="@{/home/question}" >
+                                <!-- <button onclick="input1()">tiwen</button> -->
+                                    <button class="btn btn-outline-info px-2 mr-4" style="float:right" 
+                                    th:onclick="input([[${user.UID}]],[[${user.username}]])">提 问</button>
+                                </a>    
+                                    
+                               
+                            </li>
+                        </ul>
+
+
+
+                    </div>
+                    <!-- 用户排行 -->
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5" style="color: steelblue;">
+                        <h4>用 户 排 行</h4>
+                        <ul class="list-group table table-hover">
+                            <li class="list-group-item">
+                                <span class="badge">No1</span>用户No1
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">No2</span>用户No2
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">No3</span>用户No3
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">No4</span>用户No4
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge">No5</span>用户No5
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+
+
+
+
+
+
+
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo
+    </footer>
+    <script type="text/javascript">
+   
+    function input(UID,username) {
+    	sessionStorage.setItem("uidans",UID);
+        sessionStorage.setItem("username",username);
+    }
+    </script>
+    
+
+</body>
+
+</html>

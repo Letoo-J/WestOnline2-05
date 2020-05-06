@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.boot.mine.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="org.boot.mine.models.User">
+    <constructor>
+      <idArg column="UID" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="MailBox" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="PicName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="OpenSta" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Act" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Prohibit" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Quiz" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Questions" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Replies" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Salt" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="isAdmin" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="mailCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  
+  
+  <!-- <select id="selectUserList" parameterType="User" resultMap="BaseResultMap">
+    select "UID", Username, "Password", MailBox, PicName, OpenSta, Act, Prohibit, Quiz, 
+    Questions, Replies, Salt, isAdmin
+    from user
+    where isAdmin = 'no'
+    <if test="">
+    </if>
+  </select> -->
+  
+  <!-- 查询所有显示在home的用户  [改！Act='yes' and OpenSta='open'] -->
+  	<!-- and UID not in (select UIDop from blacklist where UIDed=#{UID}) -->
+	<select id="selectAllUser" parameterType="Integer" resultMap="BaseResultMap">
+	    select * from user 
+	    where OpenSta='open' and Act='yes' and Prohibit='no' and isAdmin='no' and UID &lt;&gt; #{UID}
+	    and UID not in (select UIDop from blacklist where UIDed=#{UID})
+	    and UID not in (select UIDre from report where UIDby=#{UID})
+  	</select>
+  	
+  	<select id="selectAllUserNo" resultMap="BaseResultMap">
+	    select * from user 
+	    where isAdmin='no' 
+  	</select>
+  	
+  	<select id="selectAllUserYou" resultMap="BaseResultMap">
+	    select * from user 
+	    where isAdmin='no' 
+  	</select>
+
+  
+  	<select id="selectUserLikeUserName" parameterType="String" resultMap="BaseResultMap">
+	    <include refid="selectUserVo"/>
+		<where>
+			<if test="data != null and data != ''">
+				AND Username like "%"#{name}"%" 
+			</if>
+			<if test="data != null and data != ''">
+				OR MailBox like "%"#{name}"%"  
+			</if>
+		</where>
+	</select>
+	<!-- 动态sql-if/where标签  -->
+	<!-- <select id="selectUserByLoginName" parameterType="String" resultType="BaseResultMap">
+		根据xxx和xxx模糊查询
+		select * from user
+		<where>where标签可以去掉【开头的AND】，and放结尾不会自动去除
+			<if test="data != null and data != ''"> 若#{u_sex}的变量u_sex=null/“”空字符串，则此条件不拼接/忽略
+				AND name like "%"#{data}"%" 
+			</if>
+			<if test="data != null and data != ''">
+				OR content like "%"#{data}"%"  
+			</if>
+		</where>
+	</select> -->
+	
+	<select id="selectUserByUserName" parameterType="String" resultMap="BaseResultMap">
+	    <include refid="selectUserVo"/>
+		where Username = #{userName}
+	</select>
+	
+	<select id="selectUserByMaliCode" parameterType="String" resultMap="BaseResultMap">
+	    <include refid="selectUserVo"/>
+		where mailCode = #{mailCode}
+	</select>
+	
+	<select id="selectUserByNM" parameterType="String" resultMap="BaseResultMap">
+	    <include refid="selectUserVo"/>
+		where Username = #{userName} and Mailbox = #{email}
+	</select>
+	
+	
+	<select id="selectUserByEmail" parameterType="String" resultMap="BaseResultMap">
+	    <include refid="selectUserVo"/>
+		where MailBox = #{email}
+	</select>
+	
+	<select id="selectUserById" parameterType="Integer" resultMap="BaseResultMap">
+		<include refid="selectUserVo"/>
+		where UID = #{userId}
+	</select>
+	
+	<delete id="deleteUserByIds" parameterType="Integer">
+ 		delete user where UID in
+ 		<foreach collection="array" item="userId" open="(" separator="," close=")">
+ 			#{userId}
+        </foreach> 
+ 	</delete>
+ 	
+	<!--  "UID", Username, "Password", MailBox, PicName, OpenSta, Act, Prohibit, Quiz, 
+    Questions, Replies, Salt, isAdmin -->
+ 	<update id="updateUser" parameterType="User">
+ 		update user
+ 		<set>
+ 			<if test="UID != null and UID != 0">UID = #{UID},</if>
+ 			<if test="username != null and username != ''">Username = #{username},</if>
+ 			<if test="password != null and password != ''">Password = #{password},</if>
+ 			<if test="mailBox != null and mailBox != ''">MailBox = #{mailBox},</if>
+ 			<if test="picName != null and picName != ''">PicName = #{picName},</if>
+ 			<if test="openSta != null and openSta != ''">OpenSta = #{openSta},</if>
+ 			<if test="act != null and act != ''">Act = #{act},</if>
+ 			<if test="prohibit != null and prohibit != ''">Prohibit = #{prohibit},</if>
+ 			<if test="quiz != null and quiz != 0">Quiz = #{quiz},</if>
+ 			<if test="questions != null and questions != 0 ">Questions = #{questions},</if>
+ 			<if test="replies != null and replies != 0 ">Replies = #{replies},</if>
+ 			<if test="salt != null and salt != ''">Salt = #{salt},</if>
+ 			<if test="isAdmin != null and isAdmin != ''">isAdmin = #{isAdmin},</if>
+ 			<if test="mailCode != null">mailCode = #{mailCode},</if>
+ 		</set>
+ 		where UID = #{UID}
+	</update>
+	
+	<update id="VerifiUserByMaliCode" parameterType="String">
+ 		update user set Act = 'yes'
+ 		where mailCode = #{mailCode}
+	</update>
+	
+	<insert id="insertUser" parameterType="User">
+ 		insert into user
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+	     	<if test="UID != null and UID != 0">UID,</if>
+ 			<if test="username != null and username != ''">Username,</if>
+ 			<if test="password != null and password != ''">Password,</if>
+ 			<if test="mailBox != null and mailBox != ''">MailBox,</if>
+ 			<if test="picName != null and picName != ''">PicName,</if>
+ 			<if test="openSta != null and openSta != ''">OpenSta,</if>
+ 			<if test="act != null and act != ''">Act,</if>
+ 			<if test="prohibit != null and prohibit != ''">Prohibit,</if>
+ 			<if test="quiz != null and quiz != 0">Quiz,</if>
+ 			<if test="questions != null and questions != 0 ">Questions,</if>
+ 			<if test="replies != null and replies != 0 ">Replies,</if>
+ 			<if test="salt != null and salt != ''">Salt,</if>
+ 			<if test="isAdmin != null and isAdmin != ''">isAdmin,</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	      	<if test="UID != null and UID != 0">#{UID},</if>
+ 			<if test="username != null and username != ''">#{username},</if>
+ 			<if test="password != null and password != ''">#{password},</if>
+ 			<if test="mailBox != null and mailBox != ''">#{mailBox},</if>
+ 			<if test="picName != null and picName != ''">#{picName},</if>
+ 			<if test="openSta != null and openSta != ''">#{openSta},</if>
+ 			<if test="act != null and act != ''">#{act},</if>
+ 			<if test="prohibit != null and prohibit != ''">#{prohibit},</if>
+ 			<if test="quiz != null and quiz != 0">#{quiz},</if>
+ 			<if test="questions != null and questions != 0 ">#{questions},</if>
+ 			<if test="replies != null and replies != 0 ">#{replies},</if>
+ 			<if test="salt != null and salt != ''">#{salt},</if>
+ 			<if test="isAdmin != null and isAdmin != ''">#{isAdmin},</if>
+	    </trim>
+	</insert>
+  
+  	<select id="checkUsernameUnique" parameterType="String" resultType="int">
+		select count(1) from user where Username=#{username}
+	</select>
+	
+	<select id="checkEmailUnique" parameterType="String" resultMap="BaseResultMap">
+		select UID, Mailbox from user where Mailbox=#{email}
+	</select>
+  
+  <!-- 自动生成的 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where UID = #{UID,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="org.boot.mine.models.User">
+    insert into user (UID, Username, Password, 
+      MailBox, PicName, OpenSta, 
+      Act, Prohibit, Quiz, 
+      Questions, Replies, Salt
+      )
+    values (#{UID,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{mailBox,jdbcType=VARCHAR}, #{picName,jdbcType=VARCHAR}, #{openSta,jdbcType=VARCHAR}, 
+      #{act,jdbcType=VARCHAR}, #{prohibit,jdbcType=VARCHAR}, #{quiz,jdbcType=INTEGER}, 
+      #{questions,jdbcType=INTEGER}, #{replies,jdbcType=INTEGER}, #{salt,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="org.boot.mine.models.User">
+    update user
+    set Username = #{username,jdbcType=VARCHAR},
+      Password = #{password,jdbcType=VARCHAR},
+      MailBox = #{mailBox,jdbcType=VARCHAR},
+      PicName = #{picName,jdbcType=VARCHAR},
+      OpenSta = #{openSta,jdbcType=VARCHAR},
+      Act = #{act,jdbcType=VARCHAR},
+      Prohibit = #{prohibit,jdbcType=VARCHAR},
+      Quiz = #{quiz,jdbcType=INTEGER},
+      Questions = #{questions,jdbcType=INTEGER},
+      Replies = #{replies,jdbcType=INTEGER},
+      Salt = #{salt,jdbcType=VARCHAR}
+    where UID = #{UID,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select UID, Username, Password, MailBox, PicName, OpenSta, Act, Prohibit, Quiz, 
+    Questions, Replies, Salt
+    from user
+    where UID = #{UID,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 	UID, Username, Password, MailBox, PicName, OpenSta, Act, Prohibit, Quiz, 
+    		Questions, Replies, Salt , isAdmin
+    from user
+  </select>
+  
+  <sql id="selectUserVo">
+        select  UID, Username, Password, MailBox, PicName, OpenSta, Act, Prohibit, Quiz, 
+    			Questions, Replies, Salt, isAdmin, mailCode
+		from user
+			<!-- 
+			left join sys_dept d on u.dept_id = d.dept_id
+			left join sys_user_role ur on u.user_id = ur.user_id
+			left join sys_role r on r.role_id = ur.role_id  
+			-->
+   </sql>
+  
+  
+</mapper>

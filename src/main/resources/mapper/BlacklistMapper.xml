@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.boot.mine.dao.BlacklistMapper">
+  <resultMap id="BaseResultMap" type="org.boot.mine.models.Blacklist">
+    <constructor>
+      <idArg column="Bno" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDop" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDed" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  
+  	<select id="selectBlackByU2"  resultMap="BaseResultMap">
+	    select  * from blacklist
+	    where UIDop=#{UID1} and UIDed=#{UID2}
+	</select>
+  
+  	<insert id="insertBlacklist" parameterType="Blacklist">
+ 		insert into blacklist
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+	     	<if test="bno != null and bno != 0">Bno,</if>
+ 			<if test="UIDop != null and UIDop != ''">UIDop,</if>
+ 			<if test="UIDed != null and UIDed != ''">UIDed,</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	    	<if test="bno != null and bno != 0">#{bno},</if>
+ 			<if test="UIDop != null and UIDop != ''">#{UIDop},</if>
+ 			<if test="UIDed != null and UIDed != ''">#{UIDed},</if>
+	    </trim>
+	</insert>
+  	
+  	<delete id="deleteBlacklistByBno" parameterType="java.lang.Integer">
+	    delete from blacklist
+	    where Bno = #{bno,jdbcType=INTEGER}
+  	</delete>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from blacklist
+    where Bno = #{bno,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="org.boot.mine.models.Blacklist">
+    insert into blacklist (Bno, UIDop, UIDed
+      )
+    values (#{bno,jdbcType=INTEGER}, #{UIDop,jdbcType=INTEGER}, #{UIDed,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.boot.mine.models.Blacklist">
+    update blacklist
+    set UIDop = #{UIDop,jdbcType=INTEGER},
+      UIDed = #{UIDed,jdbcType=INTEGER}
+    where Bno = #{bno,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select Bno, UIDop, UIDed
+    from blacklist
+    where Bno = #{bno,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select Bno, UIDop, UIDed
+    from blacklist
+  </select>
+</mapper>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 	<title>注 册</title>
+ 	<meta name="description" content="LETOO'S QUESTIONBOX">
+    <!-- Bootstrap CSS 本地引用-->
+    <link th:href="@{webjars/bootstrap/4.4.1-1/css/bootstrap.css}" rel="stylesheet">
+    <!-- <link rel="stylesheet" th:href="@{css/bootstrap.css}"> -->
+    <script th:src="@{webjars/jquery/3.4.0/jquery.js}"></script>
+    <script th:src="@{others/popper-1.16.1.min.js}"></script>
+    <script th:src="@{webjars/bootstrap/4.4.1-1/js/bootstrap.js}"></script>
+    
+    <!-- 补充 -->
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="../static/css/login.min.css" th:href="@{/css/login.min.css}" rel="stylesheet" />
+    <link href="../static/css/ry-ui.css" th:href="@{/css/ry-ui.css?v=4.2.0}" rel="stylesheet" />
+    
+    <!-- 360浏览器急速模式 -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="../static/favicon.ico" th:href="@{favicon.ico}" />
+
+</head>
+
+<body>
+  <body class="signin" >
+    <div class="signinpanel">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="signin-info">
+                    <div class="logopanel m-b">
+                        <h1><img alt="[hhh ]" src="../static/hhh.png" th:src="@{/hhh.png}"></h1>
+                    </div>
+                    <div class="m-b"></div>
+                    <h4>欢 迎 使 用 <strong> 提 问 箱</strong></h4>
+                    <ul class="m-b">
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> SpringBoot</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Mybatis</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Shiro</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Thymeleaf</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Bootstrap</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> 爆肝ing</li>
+                    </ul>
+                     
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <form id="signupForm" autocomplete="on">
+                    <h4 class="no-margins">注册：</h4>
+                    <p class="m-t-md">Memento mori</p>
+                    <label for="username" class="sr-only">username</label>
+                    <input type="text" name="username" id="username" class="form-control uname" placeholder="请输入用户名"  />
+                    
+                    <label for="mail" class="sr-only">mail</label>
+                    <input type="email" name="mail" id="mail" class="form-control email" autocomplete="on" placeholder="请输入邮箱"  />
+                    
+                    <label for="password1" class="sr-only">password1</label>
+                    <input type="password" name="password1" id="password1" class="form-control pword" placeholder="请输入密码"/>
+                    
+                    <label for="password2" class="sr-only">password2</label>
+                    <input type="password" name="password2" id="password2" class="form-control pword" placeholder="再次输入密码"/>
+                    <div class="pt-3" >
+                        <div class="col-xs-6">
+                            <!-- <input type="text" name="validateCode" class="form-control code" placeholder="验证码"
+                                maxlength="5" /> -->
+                            <label for="verifyInput" class="sr-only">verifyInput</label>
+                            <input class="form-control code" autocomplete="off" name="verifyInput" id="verifyInput" type="text" placeholder="请输入验证码">
+                        </div> 
+                         <div class="col-xs-6">
+                            <a href="javascript:void(0);" title="点击更换验证码">
+                                <img th:src="@{getVerifyCode}" onclick="changeCode()" class="verifyCode"/>                       
+                            </a>
+                        </div>
+                    </div>
+					<div id="erro"></div>
+                    <button class="btn btn-success btn-block" id="btnSubmit" >立即注册&raquo;</button>
+                </form>
+                <div id="error_messages"> 
+				   <div id="error_tips"></div> 
+				   <ul></ul>
+				</div> 
+				<div id="error_container"></div> 
+            </div>
+        </div>
+        <div class="signup-footer">
+            <div class="pull-left">
+                &copy; 2020 All Rights Reserved. Letoo <br>
+            </div>
+        </div>
+    </div>
+
+
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <!-- <footer class="text-center text-muted py-4">
+        Copyright @Letoo 2020-05
+    </footer>
+ -->
+ 	<script src="../static/ajax/libs/validate/jquery.validate.min.js"
+        th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
+    <script src="../static/ajax/libs/validate/messages_zh.min.js"
+        th:src="@{/ajax/libs/validate/messages_zh.min.js}"></script>
+    <script src="../static/ajax/libs/layer/layer.js" th:src="@{/ajax/libs/layer/layer.js}"></script>
+    <script src="../static/ajax/libs/blockUI/jquery.blockUI.js"
+        th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
+    <script src="../static//js/rrr/ry-ui.js" th:src="@{/js/rrr/ry-ui.js?v=4.2.0}"></script>
+    <script src="../static/js/register.js" th:src="@{js/register.js}"></script>
+    <script src="../static/ajax/libs/validate/additional-methods.min.js"
+        th:src="@{/ajax/libs/validate/additional-methods.min.js}"></script>
+	<script src="../static/js/jquery.base64.js" th:src="@{js/jquery.base64.js}" type="text/javascript"></script>
+	
+	<script>
+        
+        
+    </script>
+    
+</body>
+
+</html>

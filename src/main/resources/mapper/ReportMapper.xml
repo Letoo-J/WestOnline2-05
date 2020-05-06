@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.boot.mine.dao.ReportMapper">
+  <resultMap id="BaseResultMap" type="org.boot.mine.models.Report">
+    <constructor>
+      <idArg column="Rno" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDre" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDby" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="ReportTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="QIDreport" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Reason" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Handle" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  	
+  	<select id="selectReportByU2"  resultMap="BaseResultMap">
+	    select  * from report
+	    where UIDre=#{UID1} and UIDby=#{UID2} and QIDreport=#{QID}
+	</select>
+	
+	<insert id="insertReport" parameterType="Report">
+ 		insert into report
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+	     	<if test="rno != null and rno != 0">Rno,</if>
+ 			<if test="UIDre != null and UIDre != ''">UIDre,</if>
+ 			<if test="UIDby != null and UIDby != ''">UIDby,</if>
+ 			<if test="reportTime != null">ReportTime,</if>
+ 			<if test="QIDreport != null and QIDreport != ''">QIDreport,</if>
+ 			<if test="reason != null and reason != ''">reason,</if>
+ 			<if test="handle != null and handle != ''">Handle,</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	    	<if test="rno != null and rno != 0">#{rno},</if>
+ 			<if test="UIDre != null and UIDre != ''">#{UIDre},</if>
+ 			<if test="UIDby != null and UIDby != ''">#{UIDby},</if>
+ 			<if test="reportTime != null">#{reportTime},</if>
+ 			<if test="QIDreport != null and QIDreport != ''">#{QIDreport},</if>
+ 			<if test="reason != null and reason != ''">#{reason},</if>
+ 			<if test="handle != null and handle != ''">#{handle},</if>
+	    </trim>
+	</insert>
+	
+	<delete id="deleteReport" parameterType="java.lang.Integer">
+	    delete from report
+	    where Rno = #{rno,jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="updateReportSta">
+	    update report
+	    set Handle = #{handle}
+	    where Rno = #{rno}
+  	</update>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from report
+    where Rno = #{rno,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.boot.mine.models.Report">
+    insert into report (Rno, UIDre, UIDby, 
+      ReportTime, QIDreport, Reason, 
+      Handle)
+    values (#{rno,jdbcType=INTEGER}, #{UIDre,jdbcType=INTEGER}, #{UIDby,jdbcType=INTEGER}, 
+      #{reportTime,jdbcType=TIMESTAMP}, #{QIDreport,jdbcType=INTEGER}, #{reason,jdbcType=VARCHAR}, 
+      #{handle,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.boot.mine.models.Report">
+    update report
+    set UIDre = #{UIDre,jdbcType=INTEGER},
+      UIDby = #{UIDby,jdbcType=INTEGER},
+      ReportTime = #{reportTime,jdbcType=TIMESTAMP},
+      QIDreport = #{QIDreport,jdbcType=INTEGER},
+      Reason = #{reason,jdbcType=VARCHAR},
+      Handle = #{handle,jdbcType=VARCHAR}
+    where Rno = #{rno,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select Rno, UIDre, UIDby, ReportTime, QIDreport, Reason, Handle
+    from report
+    where Rno = #{rno,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select Rno, UIDre, UIDby, ReportTime, QIDreport, Reason, Handle
+    from report
+  </select>
+</mapper>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS 本地引用-->
+    <link th:href="@{webjars/bootstrap/4.4.1-1/css/bootstrap.css}" rel="stylesheet">
+    <!-- <link rel="stylesheet" th:href="@{css/bootstrap.css}"> -->
+    <script th:src="@{webjars/jquery/3.4.0/jquery.js}"></script>
+    <script th:src="@{others/popper-1.16.1.min.js}"></script>
+    <script th:src="@{webjars/bootstrap/4.4.1-1/js/bootstrap.js}"></script>
+
+    <style>
+        .myheader {
+          background: url(header.png);
+          background-size: myheader
+        }
+      </style>
+
+    <title>Question box</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">提问箱首页</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">发现 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">简介</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="myheader text-dark text-center py-5">
+            <!-- py:余白的上下5rem -->
+            <h2 class="text-center mb-5">欢 迎 来 到 提 问 箱</h2> <!-- mb：下边框 -->
+            <div>
+                <button class="btn btn-outline-info my-2 my-sm-0" href="#">登 入</button>
+                <br />
+                <button class="btn btn-outline-danger my-2 my-sm-0" href="#">注 册</button>
+            </div>
+        </section>
+    </main>
+
+
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        Copyright @Letoo 2020-05
+    </footer>
+
+</body>
+
+</html>

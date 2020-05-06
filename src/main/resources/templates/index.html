@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- 引入外部文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+        
+    <title>Question box-首页</title>
+</head>
+
+<body>
+    <header>
+        <!------------------------------------------------------------------------------------->
+        <!-- alert-info：显示info颜色。  mb-0：没有下边框。
+        rounded-0：显示方角，否则有圆角。  alert-dismissible：表示可以消失/隐藏  fade：渐变。 show：显示-->
+        <div class="alert alert-info text-center mb-0 rounded-2 alert-dismissible fade show">
+            Welcome!
+            <!-- close：关闭按钮。   data-dismiss="alert"：js脚本实现--关闭alert。  &times;：❌-->
+            <button class="close" data-dismiss="alert">&times;</button>
+        </div>
+
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <!-- 可写为logo： -->
+                 <a class="navbar-brand" href="/"><img alt="[提问箱 ]" src="../static/favicon.ico" 
+                th:src="@{/favicon.ico}" style="width:35px;height:35px;"></a>
+                <!-- 汉堡按钮：navbar-toggler：开关。  data-toggle="collapse"：会收缩/伸展-->
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">发现 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">我的提问</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">收到的问题</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="发现用户"
+                                    aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 下拉列表-->
+                <div class="row">
+                	<a href="/register"><button class="btn btn-outline-info my-2 my-sm-0 mx-2">注 册</button></a>
+                    <a href="/login"><button class="btn btn-outline-info my-2 my-sm-0 mx-2">登 录</button></a>
+                </div>
+
+            </nav>
+        </div>
+
+    </header>
+
+    <section class="py-5">
+        <!-- 栅格系统 -->
+        <div class="container-fluid">
+            <div class="row pl-2">
+
+                <!-- 用户列表 -->
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ml-5">
+                    <div class="row rounded-5" style="background-color: lightblue;">
+                        <svg class="bi bi-list-ul ml-4 mt-1" width="2em" height="2em" viewBox="0 0 13 13"
+                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <h3 class="mx-2 mt-1" > 发 现</h3>
+                    </div>
+                    <hr />
+                    <ul class="list-unstyled">
+                        <li class="media my-4 ml-2 row" th:each="user: ${list}">
+                            <!-- <img src="../static/img/zdtp.jpg" class="media-left mr-3 img-round" 
+                                style="width: 38px;height: 38px;"> -->
+                            <!-- class="media-object img-circle mr-3" -->
+                            <img class="media-object img-circle mr-3"
+                                style="width:50px;height:50px;border-radius: 50%;" th:src="@{'/pic/'+${user.picName}}">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1" th:text="${user.username}"></h5>
+                                <!-- <span class="caret" th:text="${data.user.username}"></span> -->
+                                <span style="font-size: 12px;color: #999;"
+                                    th:text="'被提问数：'+ ${user.questions} + ' , 回复数：'+${user.replies}">
+                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                </span>
+                            </div>
+                            <!-- <a th:href="@{/home/question(uidans=${user.UID})}"> -->
+                            <a >
+                            <!-- <button onclick="input1()">tiwen</button> -->
+                                <button class="btn btn-outline-info px-2 mr-4" style="float:right"  disabled >提 问</button>
+                            </a>    
+                                
+                           
+                        </li>
+                    </ul>
+
+
+
+                </div>
+                <!-- 用户排行 -->
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5" style="color: steelblue;">
+                    <h4>用 户 排 行</h4>
+                    <ul class="list-group table table-hover">
+                        <li class="list-group-item">
+                            <span class="badge">No1</span>用户No1
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">No2</span>用户No2
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">No3</span>用户No3
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">No4</span>用户No4
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">No5</span>用户No5
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    
+
+
+
+
+
+
+
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo 
+    </footer>
+
+</body>
+
+</html>

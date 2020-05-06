@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.boot.mine.dao.QuestionMapper">
+  <resultMap id="BaseResultMap" type="org.boot.mine.models.Question">
+    <constructor>
+      <idArg column="QID" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDques" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="UIDans" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="Title" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="flagDelete" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ProTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="isReply" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="ansName" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  
+  <insert id="insertQuestion" parameterType="Question">
+ 		insert into question
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+	     	<if test="QID != null and QID != 0">QID,</if>
+ 			<if test="UIDques != null and UIDques != ''">UIDques,</if>
+ 			<if test="UIDans != null and UIDans != ''">UIDans,</if>
+ 			<if test="title != null and title != ''">Title,</if>
+ 			<if test="flagDelete != null and flagDelete != ''">flagDelete,</if>
+ 			<if test="proTime != null">ProTime,</if>
+ 			<if test="isReply != null and isReply != ''">isReply,</if>
+ 			<if test="ansName != null and ansName != ''">ansName,</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	      	<if test="QID != null and QID != 0">#{QID},</if>
+ 			<if test="UIDques != null and UIDques != ''">#{UIDques},</if>
+ 			<if test="UIDans != null and UIDans != ''">#{UIDans},</if>
+ 			<if test="title != null and title != ''">#{title},</if>
+ 			<if test="flagDelete != null and flagDelete != ''">#{flagDelete},</if>
+ 			<if test="proTime != null">#{proTime},</if>
+ 			<if test="isReply != null and isReply != ''">#{isReply},</if>
+ 			<if test="ansName != null and ansName != ''">#{ansName},</if>
+	    </trim>
+	</insert>
+	
+	<!-- order by ProTime desc -->
+	<select id="selectQuesByUID1" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question 
+	    where UIDques=${UID,jdbcType=INTEGER} and flagDelete = 'no'
+		order by ProTime desc
+		
+	</select>
+	
+	<select id="selectQuesByUID2" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDans = #{UID} and flagDelete = 'no'
+		order by proTime desc
+	</select>
+	
+	<select id="replyQuestions" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDques = #{UID} and isReply='yes' and flagDelete = 'no'
+		order by proTime desc
+	</select>
+	<select id="replyQuestions2" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDans = #{UID} and isReply='yes' and flagDelete = 'no'
+		order by proTime desc
+	</select>
+	
+	<select id="noReplyQuestions" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDques = #{UID} and isReply='no' and flagDelete = 'no'
+		order by proTime desc
+	</select>
+	<select id="noReplyQuestions2" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDans = #{UID} and isReply='no' and flagDelete = 'no'
+		order by proTime desc
+	</select>
+	
+	<select id="hasDeleteQuestions" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDques = #{UID} and flagDelete='yes'
+		order by proTime desc
+	</select>
+	<select id="hasDeleteQuestions2" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	    select  * from question
+		where UIDans = #{UID} and flagDelete='yes'
+		order by proTime desc
+	</select>
+  
+  
+  	<update id="deleteByPrimaryKey">
+	    update question
+	    set flagDelete = #{flagDelete}
+	    where QID = #{QID}
+  	</update>
+  	
+  	<update id="updateQuesByQID" parameterType="java.lang.Integer">
+	    update question
+	    set isReply = 'yes'
+	    where QID = #{QID}
+	  </update>
+  
+  <insert id="insert" parameterType="org.boot.mine.models.Question">
+    insert into question (QID, UIDques, UIDans, 
+      Title, flagDelete , ProTime
+      )
+    values (#{QID,jdbcType=INTEGER}, #{UIDques,jdbcType=INTEGER}, #{UIDans,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{flagDelete,jdbcType=VARCHAR}, #{proTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="org.boot.mine.models.Question">
+    update question
+    set UIDques = #{UIDques,jdbcType=INTEGER},
+      UIDans = #{UIDans,jdbcType=INTEGER},
+      Title = #{title,jdbcType=VARCHAR},
+      flagDelete = #{flagDelete,jdbcType=VARCHAR},
+      ProTime = #{proTime,jdbcType=TIMESTAMP}
+    where QID = #{QID,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select *
+    from question
+    where QID = #{QID,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select QID, UIDques, UIDans, Title, flagDelete, ProTime, isReply,ansName
+    from question
+  </select>
+  
+</mapper>

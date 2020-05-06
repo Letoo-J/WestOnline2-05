@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 最新：利用本地js -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 多平台显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- 引入外部文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <title th:text="${sectionName}"></title>
+</head>
+
+<body>
+    <div th:replace="~{header :: myheader}"></div>
+
+    <main>
+        <section class="py-5">
+            <!-- 栅格系统 -->
+            <div class="container-fluid">
+                <div class="row pl-2">
+
+                    <!-- 用户列表 -->
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ml-5">
+                        <div class="row rounded-5 pt-1" style="background-color: lightblue;">
+                            <svg class="bi bi-list-ul ml-4" width="2em" height="2em" viewBox="0 0 13 13"
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="mx-2">
+                                <span th:text="${sectionName}"></span>
+                            </h3>
+                        </div>
+                        <hr />
+                        <ul class="list-unstyled">
+                            <li class="media my-4 ml-2 row" th:each="ques: ${list}">
+                            	<div>     
+                					 <img class="media-object img-circle mr-2 mb-2"
+                            		style="width:55px;height:55px;" src="../../static/ques.png" th:src="@{/ques.png}">
+                            	</div>
+                                <div class="media-body">
+                                    <!-- 问题的链接，单开一个Controller（暂无） -->
+                                    <a th:href="@{/home/content(QID=${ques.QID})}">
+                                        <h5 class="mt-0 mb-1" th:text="${ques.title}"></h5>
+                                    </a>
+                                    <!-- <span class="caret" th:text="${data.user.username}"></span> -->
+                                    <span style="font-size: 12px;color: #999;"
+                                        th:text="'提出时间： '  +${ques._strTime}">
+                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                    </span>
+                                </div>
+                                <!-- <a th:href="@{}/home/question?username=${user.username}&UID=${user.UID}"> -->
+                                <a>
+                                    <button type="text" class="btn btn-outline-info px-2 mr-4" style="float:right"
+                                        th:text="${ques.flagDelete=='no'}? '删除': '恢复'"
+                                        th:onclick="isdelete([[${ques.flagDelete}]],[[${ques.QID}]])">删除
+                                    </button>
+                                </a>
+                            </li>
+                        </ul>
+
+
+
+                    </div>
+                    <!-- 用户排行 -->
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5" style="color: steelblue;">
+                        <h4 class="ml-2">选 项</h4>
+                        <div class="list-group  rounded-2">
+                            <a href="/home/myQues" class="list-group-item list-group-item-action active"
+                                th:class="${section == 'myQues'}? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'">收到的问题
+                                <span class="badge badge-primary badge-pill">14</span>
+                            </a>
+                            <a href="/home/myQues/isReply" class="list-group-item list-group-item-action"
+                                th:class="${section == 'isReply'}? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'">已回复的问题
+                                <span class="badge badge-primary badge-pill">14</span>
+                            </a>
+                            <a href="/home/myQues/noReply" class="list-group-item list-group-item-action"
+                                th:class="${section == 'noReply'}? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'">未回复的问题
+                                <span class="badge badge-primary badge-pill">14</span>
+                                <a href="/home/myQues/hasDelete" class="list-group-item list-group-item-action"
+                                    th:class="${section == 'hasDelete'}? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'">已删除的问题
+                                    <span class="badge badge-primary badge-pill">14</span>
+                                </a>
+                                <!-- <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Vestibulum at eros</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <!----------------------------------------------------------------------------------- -->
+    <!-- text-muted: 柔和色
+        添加版权 -->
+    <footer class="text-center text-muted py-4">
+        &copy; 2020 All Rights Reserved. Letoo
+    </footer>
+	<!-- 验证插件 -->
+	<script src="../../static/ajax/libs/validate/jquery.validate.min.js"
+        th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
+    <script src="../../static/ajax/libs/validate/messages_zh.min.js"
+        th:src="@{/ajax/libs/validate/messages_zh.min.js}"></script>
+    <script src="../../static/ajax/libs/layer/layer.js" th:src="@{/ajax/libs/layer/layer.js}"></script>
+    <script src="../../static/ajax/libs/blockUI/jquery.blockUI.js"
+        th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
+    <script src="../../static/ajax/libs/validate/additional-methods.min.js"
+        th:src="@{/ajax/libs/validate/additional-methods.min.js}"></script>
+        
+    <script type="text/javascript">
+        function isdelete(flagDelete, QID) {
+            $.ajax({
+                url: encodeURI("/home/myQuiz/delete"),
+                type: "post",  //请求的方法
+                cache: false, //去除缓存
+                async: false,  //async:false同步。true异步方式
+                dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+                data: {  //data:$(form).serialize(),
+                    "flagDelete": flagDelete,
+                    "QID": QID,
+                },
+                success: function (result) {
+                    if (result.code == 200) { //修改成功
+                        //layer.msg("修改成功");
+                        alert("修改成功");
+                        window.location.reload();  
+                    } else {
+                        //layer.msg("修改失败");
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert(".......页面出错了.......");
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+
+</html>
