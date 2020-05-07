@@ -11,6 +11,6 @@ public class UsernameORpasswordNotExistsException extends UserException
 
     public UsernameORpasswordNotExistsException()
     {
-        super("用户名或密码为空", null);
+        super("密码不在指定范围内", null);
     }
 }

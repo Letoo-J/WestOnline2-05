@@ -70,7 +70,7 @@ public class LoginServiceImpl
 
         // 用户名/邮箱不在指定范围内 错误
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH){
-        	//return Result.of(05, "用户名/邮箱不在指定范围内");
+        	//return Result.of(05, "用户名不在指定范围内");
         	throw new UsernameORmailNotMatchException();  //【改！】
         }
 

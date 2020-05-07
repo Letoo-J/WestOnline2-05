@@ -114,8 +114,9 @@ public class AdminController {
 			user.setProhibit("yes");
 			_userService.updateUser(user);
 		}
-		else if(sta.equals("2")){  // 忽略
+		else if(sta.equals("2")){  // 忽略 则删除举报信息
 			a = _reportService.updateReportSta(Rno, "no");
+			_reportService.deleteReport(Rno);
 		}
 
 		Map<String, Object> result = new HashMap<String, Object>();

@@ -11,6 +11,6 @@ public class UsernameORmailNotMatchException extends UserException
 
     public UsernameORmailNotMatchException()
     {
-        super("用户名/邮箱不在指定范围内", null);
+        super("用户名不在指定范围内", null);
     }
 }

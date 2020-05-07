@@ -16,6 +16,7 @@ import org.boot.mine.service.impl.IMailServiceImpl;
 import org.boot.mine.service.impl.UserServiceImpl;
 import org.boot.mine.util.DigestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,6 +78,9 @@ public class UserController {
 		return "resetPassword";
 	}
 	
+	@Value("${Store.root.localhost}")
+	String localhost;
+	
 	//2.在resetPassword.html 点击“发送密码重置链接”
 	@PostMapping("/resetPassword")
 	@ResponseBody
@@ -99,8 +103,8 @@ public class UserController {
 	        String subject = "来自LETOO提问箱的密码重置邮件";
 	        //user/checkCode?code=code(激活码)是我们点击邮件链接之后根据激活码查询用户，如果存在说明一致，将用户状态修改为激活
 	        //上面的码发送到用户注册邮箱
-	        String _sss = "http://localhost:8080/user/resetPassword?mailCode=";
-	        String context = "<a href=\"http://localhost:8080/user/resetPassword?mailCode="+mailCode+"\">激活请访问: "+_sss+mailCode+"</a>";
+	        String _sss = "http://"+localhost+":8080/user/resetPassword?mailCode=";
+	        String context = "<a href=\"http://"+localhost+":8080/user/resetPassword?mailCode="+mailCode+"\">激活请访问: "+_sss+mailCode+"</a>";
 	        //发送激活邮件
 	        try {
 				_mailService.sendHtmlMail (mail,subject,context);

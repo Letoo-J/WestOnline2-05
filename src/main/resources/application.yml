@@ -9,13 +9,14 @@ Question_Box:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/Question_Box/uploadPath，Linux配置 /home/Question_Box/uploadPath）
-  profile: G:/Question_Box/uploadPath
+  profile: C:/Question_Box/uploadPath
   # 获取ip地址开关
   addressEnabled: true
   
 Store:
   root:
-    path: G:/dataWEST05
+    path: C:/dataWEST05
+    localhost: 47.98.151.13
 
 #端口号配置
 server:
@@ -25,7 +26,7 @@ server:
     context-path: /
   tomcat:
     # 存放Tomcat的日志目录
-    basedir: G:/tomcat
+    basedir: C:/tomcat
     accesslog: 
         # 开启日志记录
         enabled: true
@@ -81,12 +82,12 @@ spring:
     
 #静态文件配置
   resources:
-    static-locations: classpath:/static,classpath:/META-INF/resources,classpath:/templates/
+    static-locations: classpath:/static,classpath:/META-INF/resources,classpath:/templates/,classpath:/XXXX/,file:/XXXX/
 #jdbc配置
   datasource:
-    url: jdbc:mysql://localhost:3306/question_box?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Etc/GMT-8
-    username: root
-    password: 123456
+    url: jdbc:mysql://47.98.151.13:3306/question_box?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Etc/GMT-8
+    username: test
+    password: 123789
     driver-class-name: com.mysql.cj.jdbc.Driver
 #mybatis配置
 mybatis:

@@ -23,6 +23,7 @@ import org.boot.mine.service.impl.PasswordService;
 import org.boot.mine.service.impl.UserServiceImpl;
 import org.boot.mine.util.DigestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -184,6 +185,9 @@ public class PersonController {
 		return result;
 	}
 	
+	@Value("${Store.root.localhost}")
+	String localhost;
+	
 	//点击“激活邮箱”
 	@PostMapping("/home/person/mailVerifi")
 	@ResponseBody
@@ -202,7 +206,7 @@ public class PersonController {
         //user/checkCode?code=code(激活码)是我们点击邮件链接之后根据激活码查询用户，如果存在说明一致，将用户状态修改为“1”激活
         //上面的激活码发送到用户注册邮箱
         String _sss = "http://localhost:8080/user/checkCode?mailCode=";
-        String context = "<a href=\"http://localhost:8080/user/checkCode?mailCode="+mailCode+"\">激活请访问:"+_sss+mailCode+"</a>";
+        String context = "<a href=\"http://"+localhost+":8080/user/checkCode?mailCode="+mailCode+"\">激活请访问:"+_sss+mailCode+"</a>";
         //发送激活邮件
         try {
 			_mailService.sendHtmlMail (u.getMailBox(),subject,context);

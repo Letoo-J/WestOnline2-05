@@ -25,6 +25,7 @@ import net.coobird.thumbnailator.Thumbnails;
 
 //头像上传接口
 @Controller
+
 public class UploadController{
 	@Autowired
 	UserServiceImpl _userService;
@@ -92,6 +93,6 @@ public class UploadController{
         }
         long  endTime=System.currentTimeMillis();
         System.out.println("方法三的运行时间："+String.valueOf(endTime-startTime)+"ms");
-        return "/home/person"; 
+        return "home/person"; 
     }
 }
