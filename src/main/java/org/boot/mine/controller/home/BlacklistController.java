@@ -43,8 +43,13 @@ public class BlacklistController {
 			Blacklist black = new Blacklist();
 			black.setUIDed(UIDques);  //被操作者
 			black.setUIDop(UIDans);   //操作者
-			//插入
-			b = _blackService.insertBlacklist(black);
+			
+			//查看是否已经存在拉黑关系
+			Blacklist bla = _blackService.selectBlackByU2(UIDans, UIDques);
+			if(bla == null) {   //若不存在拉黑关系
+				//插入
+				b = _blackService.insertBlacklist(black);
+			}
 			
 			//删除问题
 			_quesService.deleteQuesByQID(QID, "yes");

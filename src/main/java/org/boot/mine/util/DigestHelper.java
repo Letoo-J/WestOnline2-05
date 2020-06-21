@@ -12,8 +12,8 @@ import java.security.NoSuchAlgorithmException;
  * 内容摘要算法辅助类
  * 数据类型：byte[]、String、InputStream、File
  * 常用算法：MD2、MD5、SHA、SHA-1、SHA-256、SHA-384、SHA-512
- * @author Master.Xia
- * @version 1.1 Date:2017年2月9日
+ * @author 
+ * @version 
  */
 public class DigestHelper {
 

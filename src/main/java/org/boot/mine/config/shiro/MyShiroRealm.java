@@ -1,4 +1,4 @@
-package org.boot.mine.shiro;
+package org.boot.mine.config.shiro;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -17,6 +17,8 @@ import org.boot.mine.service.impl.LoginServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.alibaba.fastjson.JSON;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +42,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
  
 	/**
-	 * 方面用于加密 参数：AuthenticationToken是从表单穿过来封装好的对象
+	 * 	方面用于加密 参数：AuthenticationToken是从表单穿过来封装好的对象
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -53,6 +55,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 		// 获得从表单传过来的用户名
 		String username = upToken.getUsername();
 		String password = "";
+		String uString;
         if (upToken.getPassword() != null)
         {
             password = new String(upToken.getPassword()); //拿到表单的密码
@@ -64,6 +67,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         {
         	//尝试登入！（里面进行 验证码、密码加盐校验）
             user = _loginService.login(username, password,verifyInput);
+            //uString = JSON.toJSONString(user);
             
         }
         catch (CaptchaException e)
@@ -110,6 +114,17 @@ public class MyShiroRealm extends AuthorizingRealm {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	/**
+     * 建议重写此方法，提供唯一的缓存Key!!!!【才可以进行正常退出、清除缓存】
+     */
+    @Override
+    protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+        User user = (User) principals.getPrimaryPrincipal();
+        return user.getUID();
+//      	return super.getAuthorizationCacheKey(principals);
+    }
  
 	
 	// 用于授权

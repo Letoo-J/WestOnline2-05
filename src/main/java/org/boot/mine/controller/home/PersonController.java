@@ -55,7 +55,7 @@ public class PersonController {
 
 	@RequestMapping("/home/person")
 	public Object person(HttpSession session) {
-		User u = (User) session.getAttribute("user");
+		User u = (User) session.getAttribute("user"); 	
 		Integer UID = u.getUID();
 		
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -277,14 +277,14 @@ public class PersonController {
 	@RequestMapping("/pic/{fileName:.+}")
     @ResponseBody
     public void show(@PathVariable String fileName, HttpServletResponse response)throws IOException{
-		System.out.println("xxxxbbbb");
 		FileInputStream fileIs=null;
-           OutputStream outStream = null;
-		try
-		{
+        OutputStream outStream = null;
+           
+		try{
         	File path = new File(ResourceUtils.getURL("classpath:").getPath());
-        	if(!path.exists()) path = new File("");
-        	System.out.println("回显path:"+path.getAbsolutePath());
+        	if(!path.exists()) {
+        		path = new File("");
+        	}
       
         	String pathhead=path.getAbsolutePath();
             String path1=pathhead+"/XXXX/"+fileName;
@@ -292,7 +292,7 @@ public class PersonController {
     		//ResponseEntity.ok(T) 返回指定内容主体
          
             fileIs = new FileInputStream(path1);
-            System.out.println("回显path111:"+path1);
+            System.out.println("回显path:"+path1);
             //得到文件大小
             int i=fileIs.available();
             //准备一个字节数组存放二进制图片

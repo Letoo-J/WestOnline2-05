@@ -86,6 +86,7 @@ public class UserController {
 	@ResponseBody
 	public Object resetPassword(@RequestParam("mail") String mail,
             HttpServletRequest request) {
+		System.out.println("mail:"+mail);
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		User u = _userService.selectUserByEmail(mail);
@@ -104,7 +105,7 @@ public class UserController {
 	        //user/checkCode?code=code(激活码)是我们点击邮件链接之后根据激活码查询用户，如果存在说明一致，将用户状态修改为激活
 	        //上面的码发送到用户注册邮箱
 	        String _sss = "http://"+localhost+":8080/user/resetPassword?mailCode=";
-	        String context = "<a href=\"http://"+localhost+":8080/user/resetPassword?mailCode="+mailCode+"\">激活请访问: "+_sss+mailCode+"</a>";
+	        String context = "<a href=\"http://"+localhost+":8080/user/resetPassword?mailCode="+mailCode+"\">重置密码请访问: "+_sss+mailCode+"</a>";
 	        //发送激活邮件
 	        try {
 				_mailService.sendHtmlMail (mail,subject,context);
@@ -131,9 +132,6 @@ public class UserController {
 		System.out.println(user);
 		
         if (user != null){   //可以重置密码了
-        	//把code验证码清空，已经不需要了
-        	user.setMailCode("");
-           	_userService.updateUser(user);
            	System.out.println("重置密码的user："+user);
            	return "redirect:/user/resetPasswordForm?mailCode="+mailCode;  //转到重置密码具体页面 + 并且传mailCode
         }else {
@@ -164,7 +162,8 @@ public class UserController {
 			String ciphertext = md5( sha512(pw)+md5(u.getSalt()) );
 			u.setPassword(ciphertext);
 			//把code验证码清空，已经不需要了
-			//u.setMailCode("");
+			u.setMailCode("");
+			
 			//修改密码：
 			_userService.updateUser(u);
           	System.out.println("修改密码后的user："+u);

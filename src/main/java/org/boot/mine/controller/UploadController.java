@@ -33,7 +33,7 @@ public class UploadController{
 	@PostMapping("/post/upload")
     public String  springUpload(HttpServletRequest request) throws IllegalStateException, IOException
     {
-	 int size=200;
+		 int size=200;
          long  startTime=System.currentTimeMillis();
          //将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
         CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(
@@ -48,13 +48,11 @@ public class UploadController{
            //获取multiRequest 中所有的文件名
             Iterator iter=multiRequest.getFileNames();
              
-            while(iter.hasNext())
-            {
+            while(iter.hasNext()){
             	
                 //一次遍历所有文件
                 MultipartFile file=multiRequest.getFile(iter.next().toString());
-                if(file!=null)
-                {
+                if(file!=null){
                 	BufferedImage bi = ImageIO.read(file.getInputStream());  //获取图像输入流
         			int w=bi.getWidth();   //得到宽度
         			int h=bi.getHeight();  //得到高度
@@ -72,12 +70,11 @@ public class UploadController{
         	        }
                 	File path = new File(ResourceUtils.getURL("classpath:").getPath());
                 	if(!path.exists()) path = new File("");
-                	System.out.println("path:"+path.getAbsolutePath());
               
                 	String pathhead=path.getAbsolutePath();
                 	//path1:文件最终存储位置
                     String path1=pathhead+"/XXXX/"+file.getOriginalFilename();
-                    System.out.println(path1);
+                    System.out.println("存储位置"+path1);
                     Thumbnails.of(file.getInputStream())    
 	        		.size(tow, toh)             //缩放 设置大小
 	        		.outputFormat("jpg")		//指定输出类型

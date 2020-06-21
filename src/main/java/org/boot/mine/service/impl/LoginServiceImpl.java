@@ -71,8 +71,10 @@ public class LoginServiceImpl
         // 用户名/邮箱不在指定范围内 错误
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH){
         	//return Result.of(05, "用户名不在指定范围内");
-        	throw new UsernameORmailNotMatchException();  //【改！】
+        	throw new UsernameORmailNotMatchException();  
         }
+        
+        
 
         /********************************************************************/
         // 查询用户信息
@@ -97,7 +99,7 @@ public class LoginServiceImpl
         	throw new UserBlockedException();
         }
         
-        //验证密码是否正确： 传入从数据库去除的用户对象，进行加盐密文匹配
+        //验证密码是否正确： 传入从数据库取出的用户对象，进行加盐密文匹配
         passwordService.validate(user, password);   //密码不正确
         //return Result.of(07, "用户密码不正确！");
         
@@ -107,7 +109,7 @@ public class LoginServiceImpl
         //return Result.of(200, "登入成功！", user);
     }
 
-    private boolean maybeEmail(String username)   //暂时不用，有误
+    private boolean maybeEmail(String username)   //暂时不用
     {
         if (!username.matches(UserConstants.EMAIL_PATTERN))
         {

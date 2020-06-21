@@ -15,6 +15,7 @@ import org.boot.mine.service.impl.BlacklistServiceImpl;
 import org.boot.mine.service.impl.QuestionServiceImpl;
 import org.boot.mine.service.impl.ReplyServiceImpl;
 import org.boot.mine.service.impl.ReportServiceImlp;
+import org.boot.mine.util.JsoupUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,6 +89,11 @@ public class ContentController {
 		//得到此问题的回复列表
 		List<Reply> list = new ArrayList<Reply>();
 		list = _replyService.selectReplyByQID(QID);
+		//返回数据进行防xss攻击
+		for (Reply reply : list) {
+			reply.setContent(JsoupUtil.clean(reply.getContent()));
+		}
+		
 		if(list.isEmpty()) {
 			model.addAttribute("list", 0);
 		}

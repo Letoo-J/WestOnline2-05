@@ -26,6 +26,7 @@ public class CaptchaController {
             String randomText = VerifyCode.drawRandomText(width, height, verifyImg);//单独的一个类方法，出于代码复用考虑，进行了封装。功能是生成验证码字符并加上噪点，干扰线，返回值为验证码字符
 
             //验证码放入session中
+            randomText = randomText.toUpperCase();  //全部转换为大写
             request.getSession().setAttribute("verifyCode", randomText);
             response.setContentType("image/png");//必须设置响应内容类型为图片，否则前台不识别
 

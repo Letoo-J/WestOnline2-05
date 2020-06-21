@@ -152,7 +152,6 @@
                     </div>
 
 
-                    <!-- 用户排行 -->
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pt-6 rounded-5 pr-3 mr-5 "
                         style="color: steelblue;">
                         <!-- <h4 class="ml-2" style="font-size: xx-small;">放 头 像 吧</h4> -->
@@ -188,6 +187,7 @@
                                                     accept="image/jpg,image/jpeg,image/png,image/bmp" /><br />
                                                 <input type="submit" value="文件上传"
                                                     class="btn btn-outline-warning" /><br />
+                                                <input name="uuidToken" th:value="${session.uuidToken}" type="hidden">
                                             </div>
                                         </form>
                                     </div>
@@ -217,9 +217,9 @@
             inputItem.onblur = function () {
                 console.log(inputItem.value)
                 if (!inputItem.value.trim()) {
-                    alert('用户名不能为空')
-                    inputItem.value = ''
-                    inputItem.focus()
+                    alert('用户名不能为空');
+                    inputItem.value = '';
+                    inputItem.focus();
                 }
             }
             window.location.reload();
@@ -228,10 +228,10 @@
                 url: encodeURI("/home/person/modifyUsername"),
                 type: "post",  //请求的方法
                 cache: false, //去除缓存
-                async: false,  //async:false同步。true异步方式
+                //async: false,  //async:false同步。true异步方式
                 dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
                 data: {  //data:$(form).serialize(),
-                    "newName": username,
+                    "newName": username,  
                 },
                 success: function (result) {
                     if (result.code == 200) { //修改成功
@@ -259,7 +259,7 @@
                 url: encodeURI("/home/person/mailVerifi"),
                 type: "Post",  //请求的方法
                 cache: false, //去除缓存
-                async: false,  //async:false同步。true异步方式
+                //async: false,  //async:false同步。true异步方式
                 dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
                 data: {  //data:$(form).serialize(),
 
@@ -283,7 +283,7 @@
                 url: encodeURI("/home/person/noMailVerifi"),
                 type: "Post",  //请求的方法
                 cache: false, //去除缓存
-                async: false,  //async:false同步。true异步方式
+                //async: false,  //async:false同步。true异步方式
                 dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
                 data: {  //data:$(form).serialize(),
 
@@ -309,7 +309,7 @@
                 url: encodeURI("/home/person/OCMail"),
                 type: "Post",  //请求的方法
                 cache: false, //去除缓存
-                async: false,  //async:false同步。true异步方式
+                //async: false,  //async:false同步。true异步方式
                 dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
                 data: {  //data:$(form).serialize(),
 
@@ -365,7 +365,7 @@
                 let formData = new FormData();
                 // console.log(fileData)
                 formData.append('files', fileData);
-                formData.append('token', token);
+                //formData.append('token', token);
 
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', "upload/img");

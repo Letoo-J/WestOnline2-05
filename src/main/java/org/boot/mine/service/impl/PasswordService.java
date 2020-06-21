@@ -20,7 +20,7 @@ public class PasswordService
         if (!matches(user, password))  //若密码校验未通过
         {
         	//return false;
-            throw new UserPasswordNotMatchException();  //【改！】
+            throw new UserPasswordNotMatchException();  
         }
         else {
         	return true;

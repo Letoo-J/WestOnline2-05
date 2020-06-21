@@ -36,7 +36,8 @@ public class ReplyController {
 		String uIDans = request.getParameter("UIDans");  //当前问题的回答者
 		String usernamrCo = request.getParameter("usernamrCo"); //当前回复操作者
 		String content = request.getParameter("content");
-		content = StringEscapeUtils.escapeHtml4(content);  //转义
+		//content = StringEscapeUtils.escapeHtml4(content);  //转义
+		//法二：content = ESAPI.encoder().encodeForHTML(content);
 		
 		Integer UIDco = Integer.valueOf(uIDco);  
 		Integer UIDans = Integer.valueOf(uIDans);  

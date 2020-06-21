@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.session.Session;
 import org.boot.mine.models.User;
 import org.boot.mine.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,9 @@ public class HomeController {
 	UserServiceImpl _userService;
 	
 	@RequestMapping("/home")
-	public String home(Model model, HttpServletRequest request){
-		User u1 = (User) request.getSession().getAttribute("user");
+	public String home(Model model, HttpServletRequest request,HttpSession session){
+		User u1 = (User) session.getAttribute("user");
+		
 		Integer UID = u1.getUID();
 		List<User> list1 = _userService.selectAllUser(UID);
 		List<User> list2 = new ArrayList<User>();

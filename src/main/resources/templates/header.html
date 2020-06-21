@@ -78,7 +78,26 @@
         </div>
     </header>
 		
-		
-	</div>
+	<script type="text/javascript">	
+	//设置AJAX的全局默认选项
+        $.ajaxSetup( {
+        	type: "post",  //请求的方法
+        	cache: false, //去除缓存
+            async: true,  //async:false同步。true异步方式
+            dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+            headers: { // 默认添加请求头
+                "uuidToken": '[[${session.uuidToken}]]',
+            } ,       
+            error: function(jqXHR, textStatus, errorMsg){ // 出错时默认的处理函数
+                // jqXHR 是经过jQuery封装的XMLHttpRequest对象
+                // textStatus 可能为： null、"timeout"、"error"、"abort"或"parsererror"
+                // errorMsg 可能为： "Not Found"、"Internal Server Error"等
+
+                // 提示形如：发送AJAX请求到"/index.html"时出错[404]：Not Found
+                alert( '发送AJAX请求时出错[' + jqXHR.status + ']：' + errorMsg );        
+            }
+        } );
+     </script>
+	
 </body>
 </html>

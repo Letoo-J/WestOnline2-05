@@ -45,28 +45,4 @@ public class IndexController {
 		return "index";
 	}
 	
-	
-	
-	@RequestMapping("/avatar")
-	public String avatar(){
-		return "wuyong/avatar";
-	}
-	
-	@RequestMapping("/password")
-	public String password(){
-		return "wuyong/password";
-	}
-	
-	@RequestMapping("/profile")
-	public String profile(){
-		return "wuyong/profile";
-	}
-	
-	@RequestMapping("/detail")
-	public String detail(){
-		return "wuyong/detail";
-	}
-	
-	
-	
 }

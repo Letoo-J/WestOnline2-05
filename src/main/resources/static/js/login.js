@@ -22,18 +22,64 @@ function changeCode() {
 //异步检测用户名是否存在
 
 
+//声明加密对象
+var RSADo = {
+    "modulus":"",
+    "publicKey":""}
+//获取加密信息
+function getModule(){
+	$.ajax({
+    	url: encodeURI("/getMoudle"),
+        type: "post",  //请求的方法
+        cache: false, //去除缓存
+        async: false,  //async:false同步。true异步方式
+        dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+        data: {  
+        },
+        success: function(data) {
+        	RSADo.modulus = data.modulus;
+            RSADo.publicKey = data.publicKey;
+            //console.log("publicKey:"+data.publicKey); 
+        },
+        error: function () {
+            alert(".......出错了.......");
+        }
+    });
+}
+//公钥加密方法
+function encryption(str){
+	// 实例化js的RSA对象生成
+    var rsa = new RSAKey()
+    rsa.setPublic(RSADo.modulus, RSADo.publicKey)
+    var encryptStr = rsa.encrypt(str);
+    return encryptStr;
+}
 
 function login() {
 	var username = $("#username").val();
-    var password1 = $("#password").val();
+    var password = $("#password").val();
     var verifyInput = $("#verifyInput").val();
+//    var rememberMe = {}; //定义一个空数组 
+//    $("input[name='rememberMe']:checked").each(function(i){//把所有被选中的复选框的值存入数组
+//    	rememberMe[i] =$(this).val();
+//    });
+    var rememberMe = $("input[name='rememberMe']:checked").val();
     
     //alert("加密前"+ password1);
     //加密传给后端
-
-    var password = $.base64.encode(password1);
+    //var password = $.base64.encode(password1);
     //alert("加密后："+password);
     //$("#passWord").val(password);
+    
+    //-----密码进行DES加密------
+//    var key ='[[${session.uuid}]]';  //获取uuid值
+//    var passwordDES = encryptByDES(password, key);
+    
+    //获取模块：
+    getModule();
+    var encryptPassword = encryption(password);
+    $('#password').val(encryptPassword); //填充表单
+    //console.log("加密后："+encryptPassword);  //'加密后（encrypt）：',
   
     $.ajax({
     	url: encodeURI("/login"),
@@ -43,14 +89,19 @@ function login() {
         dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
         data: {  //data:$(form).serialize(),
             "username": username,
-            "password": password,
+            "encryptPassword": encryptPassword,
             "verifyInput": verifyInput,   //验证码
+            "rememberMe": rememberMe ,
         },
         success: function(result) {
-            if (result.code == 200) { //登入成功
+        	if(result.user_status != null ){
+            	alert(result.message);
+            }
+        	else if (result.code == 200) { //登入成功
             	alert(result.msg+"  即将跳转到首页！");
             	window.location.href = "/home";  //成功则跳转到用户首页
-            } else {
+            } 
+            else {
             	//$.modal.closeLoading(); //关闭加载层
             	layer.msg(result.msg); 
             	changeCode();  //刷新验证码
@@ -71,20 +122,20 @@ jQuery.validator.addMethod("isMail",
 		function(value, element) {   
 		// /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
 			var tel =/^([a-zA-Z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/;
-		//var tell =/^((([a-z]|\\d|[!#\\$%&'\\*\\+\\-\\/=\\?\\^_`{\\|}~]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])+(\\.([a-z]|\\d|[!#\\$%&'\\*\\+\\-\\/=\\?\\^_`{\\|}~]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])+)*)|((\\x22)((((\\x20|\\x09)*(\\x0d\\x0a))?(\\x20|\\x09)+)?(([\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]|\\x21|[\\x23-\\x5b]|[\\x5d-\\x7e]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(\\\\([\\x01-\\x09\\x0b\\x0c\\x0d-\\x7f]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF]))))*(((\\x20|\\x09)*(\\x0d\\x0a))?(\\x20|\\x09)+)?(\\x22)))@((([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.)+(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.?/;
-		    return this.optional(element) || (tel.test(value));
+			return this.optional(element) || (tel.test(value));
 		}, "请正确填写邮箱");
 
 jQuery.validator.setDefaults({
 		// false:仅做校验，不提交表单
 		debug: true,
-		// 提交表单时做校验
+		//失去焦点时验证
 		onfocusin:true,
+		// 提交表单时做校验(true)
 		onsubmit: true,
 		// 焦点自动定位到第一个无效元素
 		focusInvalid: true,
 		// 元素获取焦点时清除错误信息
-		focusCleanup: true,
+		focusCleanup: false,
 		//忽略 class="ignore" 的项不做校验
 		ignore: ".ignore",
 		// 忽略title属性的错误提示信息
@@ -152,17 +203,13 @@ jQuery.validator.setDefaults({
 
 
 function validateRule() {
-    //注册验证
+    //登录验证
     $("#loginForm").validate({
 		rules: {
 			username: {
 				required: true,
 				minlength: 2,
-				maxlength: 24
-//				remote:{
-//                    url:"ajax_check.action",
-//                    type:"post"
-//                }
+				maxlength: 24,	
 			},
 			password: {
 				required: true,

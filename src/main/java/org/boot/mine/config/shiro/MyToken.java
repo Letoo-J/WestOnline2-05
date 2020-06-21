@@ -1,11 +1,20 @@
-package org.boot.mine.shiro;
+package org.boot.mine.config.shiro;
 
 
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.RememberMeAuthenticationToken;
 
-public class MyToken implements AuthenticationToken {
+public class MyToken implements AuthenticationToken, RememberMeAuthenticationToken{
 
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+     * The verifyInput 验证码
+     */
     private String verifyInput;//新增的校验因子
     
     /**
@@ -17,6 +26,11 @@ public class MyToken implements AuthenticationToken {
      * The password
      */
     private String password;
+    
+    /**
+     * The rememberMe 记住我选项
+     */
+    private boolean rememberMe = false;
 
     //verifyInput
     public String getVerifyInput() {
@@ -41,6 +55,14 @@ public class MyToken implements AuthenticationToken {
     public String getPassword() {
         return password;
     }
+    
+    //remeberMe
+    public void setRememberMe(boolean rememberMe) {
+		this.rememberMe = rememberMe;
+	}
+    public boolean getRememberMe() {
+        return rememberMe;
+    }
 
     public Object getPrincipal() {
         return getUsername();
@@ -52,12 +74,22 @@ public class MyToken implements AuthenticationToken {
 
     public MyToken() {}
     public MyToken(final String username, final String password,
-                                 final String verifyInput) {
+                   final String verifyInput, final boolean rememberMe) {
 
         this.username = username;
         this.password = password;
         this.verifyInput = verifyInput;
+        this.rememberMe = rememberMe ;
     }
+    
+    
+	@Override
+	public boolean isRememberMe() {
+		// TODO Auto-generated method stub
+		return rememberMe;
+	}
+	
 
+	
 }
 

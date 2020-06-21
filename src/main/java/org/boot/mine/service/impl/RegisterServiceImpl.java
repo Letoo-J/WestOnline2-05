@@ -82,11 +82,16 @@ public class RegisterServiceImpl implements RegisterService{
         }
 
         //验证邮箱是否符合格式
-//        if(!maybeEmail(mail)) {
-//        	return Result.of(06, "邮箱不符合格式");
-//        }      
-       
+        if(!maybeEmail(mail)) {
+        	return Result.of(06, "邮箱不符合格式");
+        } 
         
+        //验证密码是否符合格式
+        if(!rightPassword(password1)) {
+        	return Result.of(9, "密码不符合格式");
+        }  
+       
+
 		User user = new User();
 		//设置盐值:
 		user.setSalt(UUID.randomUUID().toString());
@@ -113,6 +118,15 @@ public class RegisterServiceImpl implements RegisterService{
 	private boolean maybeEmail(String mail)
     {
         if (!mail.matches(UserConstants.EMAIL_PATTERN))
+        {
+            return false;
+        }
+        return true;
+    }
+	
+	private boolean rightPassword(String password)
+    {
+        if (!password.matches(UserConstants.PASSWORD_PATTERN))
         {
             return false;
         }

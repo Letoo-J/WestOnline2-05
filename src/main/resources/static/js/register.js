@@ -13,39 +13,41 @@ function changeCode() {
     $('.verifyCode').attr("src", src);
 }
 
-/*function register() {
-	$.modal.loading($("#btnSubmit").data("loading"));
-	var username = $.common.trim($("input[name='username']").val());
-    var password = $.common.trim($("input[name='password']").val());
-    var validateCode = $("input[name='validateCode']").val();
-    $.ajax({
-        type: "post",
-        url: ctx + "register",
-        data: {
-            "loginName": username,
-            "password": password,
-            "validateCode": validateCode
+
+//声明加密对象
+var RSADo = {
+    "modulus":"",
+    "publicKey":""}
+//获取加密信息
+function getModule(){
+	$.ajax({
+    	url: encodeURI("/getMoudle"),
+        type: "post",  //请求的方法
+        cache: false, //去除缓存
+        async: false,  //async:false同步。true异步方式
+        dataType: "json",  //指定响应得到的数据类型：【“list”必须严格为一个json数据！】
+        data: {  
         },
-        success: function(r) {
-            if (r.code == 0) {
-            	layer.alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", {
-        	        icon: 1,
-        	        title: "系统提示"
-        	    },
-        	    function(index) {
-        	        //关闭弹窗
-        	        layer.close(index);
-        	        location.href = ctx + 'login';
-        	    });
-            } else {
-            	$.modal.closeLoading();
-            	$('.imgcode').click();
-            	$(".code").val("");
-            	$.modal.msg(r.msg);
-            }
+        success: function(data) {
+        	RSADo.modulus = data.modulus;
+            RSADo.publicKey = data.publicKey;
+            //console.log("publicKey:"+data.publicKey); 
+        },
+        error: function () {
+            alert(".......出错了.......");
         }
     });
-}*/
+}
+//公钥加密方法
+function encryption(str){
+	// 实例化js的RSA对象生成
+    var rsa = new RSAKey()
+    rsa.setPublic(RSADo.modulus, RSADo.publicKey)
+    var encryptStr = rsa.encrypt(str);
+    return encryptStr;
+}
+
+
 function register(){
     var username = $("#username").val();
     var password11 = $("#password1").val();
@@ -53,8 +55,12 @@ function register(){
     var mail = $("#mail").val();
     var verifyInput = $("#verifyInput").val();
     
-    var password1 = $.base64.encode(password11);
-    var password2 = $.base64.encode(password22);
+    //获取模块：
+    getModule();
+    var encryptPassword1 = encryption(password11);
+    var encryptPassword2 = encryption(password22);
+    $('#password1').val(encryptPassword1); //填充表单
+    $('#password2').val(encryptPassword2); //填充表单
     
     $.ajax({
         //encodeURI:对整个url进行编码(若url里面有中文。。)
@@ -62,11 +68,11 @@ function register(){
         url: encodeURI("/register"),
         type: "post",  //请求的方法
         cache: false, //去除缓存
-        async: false,  //async:false同步。true异步方式
+        async: true,  //async:false同步。true异步方式
         data: {  //$(form).ser...
             "username": username,
-            "password1": password1,
-            "password2": password2,
+            "encryptPassword1": encryptPassword1,
+            "encryptPassword2": encryptPassword2,
             "mail": mail,
             "verifyInput": verifyInput,   //验证码
         },
@@ -97,20 +103,34 @@ function register(){
     });
 }
 
+//邮箱格式验证
 jQuery.validator.addMethod("isMail",
 		function(value, element) {   
 		// /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
-			var tel =/^([a-zA-Z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/;
-		//var tell =/^((([a-z]|\\d|[!#\\$%&'\\*\\+\\-\\/=\\?\\^_`{\\|}~]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])+(\\.([a-z]|\\d|[!#\\$%&'\\*\\+\\-\\/=\\?\\^_`{\\|}~]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])+)*)|((\\x22)((((\\x20|\\x09)*(\\x0d\\x0a))?(\\x20|\\x09)+)?(([\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]|\\x21|[\\x23-\\x5b]|[\\x5d-\\x7e]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(\\\\([\\x01-\\x09\\x0b\\x0c\\x0d-\\x7f]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF]))))*(((\\x20|\\x09)*(\\x0d\\x0a))?(\\x20|\\x09)+)?(\\x22)))@((([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.)+(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.?/;
-		    return this.optional(element) || (tel.test(value));
-		}, "请正确填写邮箱");
+		var tel =/^([a-zA-Z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/;
+		return this.optional(element) || (tel.test(value));
+	}, "请正确填写邮箱");
+
+//密码验证正则表达式
+jQuery.validator.addMethod("VerifyPwd", function(value, element, param){
+    //方法中又有三个参数:value:被验证的值， element:当前验证的dom对象，param:参数(多个即是数组)
+    //alert(value + "," + $(element).val() + "," + param[0] + "," + param[1]);
+	var tel2 = /^(?=.*[0-9])(?=.*[a-zA-Z]).{6,25}$/;
+    return new RegExp(tel2).test(value);
+}, "密码中必须包含字母、数字");
+
 
 jQuery.validator.setDefaults({
 		// 仅做校验，不提交表单
 		debug: true,
-		// 提交表单时做校验
-		onfocusin:true,
+		//点击时验证  
+		onclick:true,
+		//失去焦点时验证
+		//onfocusin:true,
+		// 提交表单时做校验(true)
 		onsubmit: true,
+		//不需要每次键入就验证
+		//onkeyup: false
 		// 焦点自动定位到第一个无效元素
 		focusInvalid: true,
 		// 元素获取焦点时清除错误信息
@@ -138,12 +158,15 @@ jQuery.validator.setDefaults({
 		},
 		// 自定义错误提示位置
 		errorPlacement: function(error, element) {
-			error.insertAfter(element);
+			error.insertAfter(element);  // error.appendTo();
 //			element.popover({
 //			content:error[0].innerHTML
 //			});
 //			element.click();
 //			element.closest('div').removeClass('has-success').addClass('has-error');
+			if(element.is($("input[id='password1']").eq(0))){  //若为password1验证失败，则隐藏密码强弱提示
+				$('#passstrength').hide();
+			}
 		},
 		// 单个元素校验通过后处理
 		success: function(label, element) {
@@ -151,7 +174,12 @@ jQuery.validator.setDefaults({
 			console.log(element);
 //			$(element).closest('div').removeClass('has-success').addclass('has-error');
 //			$(element).popover('destroy');
+			if($('#password1').attr("name") == element.name){  //若为password1验证成功，则去除提示信息的元素
+				$('#passstrength').show();
+				$('#password1-error').parent().remove();
+			}
 			label.addClass("valid").text("Ok!");
+			//alert(element.name);
 		},
 		highlight: function(element, errorClass, validClass) {
 			$(element).addClass(errorClass).removeClass(validClass);
@@ -187,16 +215,23 @@ jQuery.validator.setDefaults({
 				username: {
 					required: true,
 					minlength: 2,
-					maxlength: 24
-//					remote:{
-//	                    url:"ajax_check.action",
-//	                    type:"post"
-//	                }
+					maxlength: 24,	
+					remote:{   
+						url: "/register/validateUsername", //后台处理程序    
+                        type: "post",  //数据发送方式   
+                        dataType: "json",       //接受数据格式       
+                        data:  {                     //要传递的数据   
+                        	username: function() {   
+                        		return $("#username").val();   
+                        	}   
+                        }            
+                    },
 				},
 				password1: {
 					required: true,
 					minlength: 6,
-	                maxlength: 25
+	                maxlength: 25,
+	                VerifyPwd: true,
 				},
 				password2: {
 					required: true,
@@ -204,15 +239,18 @@ jQuery.validator.setDefaults({
 				},
 				mail: {
 					required: true,
+					email: true,
 					isMail: true,
-					/*remote: {
-						url: "http://localhost:8080/register",
-						type: "post",
-						dataType: "json",
-						data: {
-							email: $("#mail").val()
-						}
-					}*/
+					remote:{   
+						url: "/register/validateEMail", //后台处理程序    
+                        type: "post",  //数据发送方式   
+                        dataType: "json",       //接受数据格式       
+                        data:  {                     //要传递的数据   
+                        	mail: function() {   
+                        		return $("#mail").val();   
+                        	}   
+                        }            
+                    },
 				},
 				verifyInput: {
 					required: true,
@@ -224,11 +262,14 @@ jQuery.validator.setDefaults({
 				username: {
 					required: "请输入用户名",
 					minlength: jQuery.validator.format("用户名至少需填写{0}个字符"),
-					maxlength: jQuery.validator.format("用户名最多填写{0}个字符")
+					maxlength: jQuery.validator.format("用户名最多填写{0}个字符"),
+					remote: "该用户名已经存在！",
 				},
 				mail:{
 					required:"邮箱不能为空",
-					isMail: "请正确填写邮箱"
+					email:"请正确填写邮箱",
+					isMail: "请填写正确格式邮箱",
+					remote: "该邮箱已经存在！",
 				},
 				password1: {
 	            	required: "请输入您的密码",
@@ -244,3 +285,29 @@ jQuery.validator.setDefaults({
 			},
 		});
 	}
+	
+	
+	$('#password1').keyup(function(e) {  //keyup
+		 //密码中必须包含大小写 字母、数字、特称字符，至少8个字符，最多30个字符
+	     var strongRegex = new RegExp('(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,25}');
+	     //密码中必须包含字母（不区分大小写）、数字、特称字符，至少8个字符，最多30个字符
+	     var mediumRegex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,25}');
+
+	     var enoughRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-zA-Z]).{6,25}$/);
+	     if (false == enoughRegex.test($(this).val())) {
+	             //$('#passstrength').html('More Characters');
+	     } else if (strongRegex.test($(this).val())) {
+	             $('#passstrength').className = 'ok';
+	             $('#passstrength').html('强');
+	     } else if (mediumRegex.test($(this).val())) {
+	             $('#passstrength').className = 'alert';
+	             $('#passstrength').html('中');
+	             //$('#password1-error').append('中');
+	     } else {
+	             $('#passstrength').className = 'error';
+	             $('#passstrength').html('弱');
+	             //$('#password1-error').append('弱');
+	     }
+	     return true;
+	});
+	

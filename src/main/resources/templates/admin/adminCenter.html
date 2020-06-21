@@ -24,77 +24,7 @@
 </head>
 
 <body>
-    <header>
-        <!------------------------------------------------------------------------------------->
-        <!-- alert-info：显示info颜色。  mb-0：没有下边框。
-        rounded-0：显示方角，否则有圆角。  alert-dismissible：表示可以消失/隐藏  fade：渐变。 show：显示-->
-        <div class="alert alert-info text-center mb-0 rounded-2 alert-dismissible fade show">
-            Welcome!
-            <!-- close：关闭按钮。   data-dismiss="alert"：js脚本实现--关闭alert。  &times;：❌-->
-            <button class="close" data-dismiss="alert">&times;</button>
-        </div>
-
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <!-- 可写为logo： -->
-                <a class="navbar-brand" href="#">提问箱首页</a>
-                <!-- 汉堡按钮：navbar-toggler：开关。  data-toggle="collapse"：会收缩/伸展-->
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/home">发现 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">我的提问</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">收到的问题</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <form class="form-inline my-2 my-lg-0">
-                                <input class="form-control mr-sm-2" type="search" placeholder="发现用户"
-                                    aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">search</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 下拉列表-->
-                <div class="nav navbar-nav navbar-expand-lg">
-                    <li><a href="/register"><button class="btn btn-outline-info my-2 my-sm-0 mx-2">注册</button></a></li>
-                    <li><a href="/login" th:if="${session.user == null}"><button
-                                class="btn btn-outline-info my-2 my-sm-0 mx-2">登入</button></a></li>
-                    <li class="nav-item dropdown" th:if="${session.user != null}">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret" th:text="${session.user.username}"></span>
-                            <!-- <span class="caret" th:if="${session.user == null}" th:text="未登入">
-                                    
-                                </span> -->
-
-                        </a>
-                        <ul class="dropdown-menu mr-4" aria-labelledby="navbarDropdown" th:if="${session.user != null}">
-                            <a class="dropdown-item" href="/home/person">个人中心</a>
-                            <a class="dropdown-item" href="#">公告</a>
-                            <a class="dropdown-item" href="#">消息</a>
-                            <a class="dropdown-item" href="#">黑名单</a>
-                            <a class="dropdown-item" href="#">退出</a>
-                        </ul>
-
-                    </li>
-                </div>
-
-            </nav>
-        </div>
-    </header>
+    <div th:replace="~{header :: myheader}"></div>
 
     <main>
         <section class="py-5">

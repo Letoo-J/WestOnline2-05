@@ -65,7 +65,8 @@
                                                 <br>
                                             </h3>
                                         </div>
-                                        <div  class="panel-body"  th:text="${reply.content}">
+                                        <!-- 可以显示html -->
+                                        <div  class="panel-body"  th:utext="${reply.content}">
                                             这是一个基本的面板
                                         </div>
                                         
@@ -77,9 +78,12 @@
                                 <span th:if="${question.UIDans == session.user.UID}" th:text="'TO: '  + '匿名用户' "></span>
                                 <span th:if="${question.UIDans != session.user.UID}" th:text="'TO: '  +${question.ansName}+'  (匿 名 发 表)'"></span>
                                 <textarea class="form-control" rows="4" id="content" name="content"></textarea>
-                                <button class="btn btn-outline-info mt-3" style="float:right"
-                                    th:onclick="reply([[${question.QID}]],[[${session.user.UID}]],[[${session.user.username}]])">回 复
-                                </button>
+                                
+                                <div th:if="${question.flagDelete != 'yes' }">
+	                                <button class="btn btn-outline-info mt-3" style="float:right"
+	                                    th:onclick="reply([[${question.QID}]],[[${session.user.UID}]],[[${session.user.username}]])">回 复
+	                                </button>
+                                </div>
                             </div>
                         </div>
 
@@ -127,17 +131,16 @@
                                                     <div class="modal-body">
                                                         <form>
                                                             <div class="form-group">
-                                                                <label for="reason" class="col-form-label">Message:</label>
+                                                                <label for="reason" class="col-form-label">举报理由:</label>
                                                                 <textarea class="form-control" id="reason"></textarea>
                                                             </div>
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
-                                                            data-dismiss="modal">Close</button>
+                                                            data-dismiss="modal">关 闭</button>
                                                         <button type="button" class="btn btn-primary"
-                                                            th:onclick="isReport([[${question.QID}]],[[${question.UIDans}]])">Send
-                                                            message
+                                                            th:onclick="isReport([[${question.QID}]],[[${question.UIDans}]])">提 交
                                                         </button>
                                                     </div>
                                                 </div>
@@ -177,9 +180,12 @@
                     "QID": QID,
                     "UIDans": UIDans,
                     "isBlack": [[${ isBlack }]],
-                },
+                }, 
                 success: function (result) {
-                    if (result.code == 200) { //修改成功
+                	if(result.description != null){
+                		alert(result.description);
+                	}
+                	else if (result.code == 200) { //修改成功
                         //layer.msg("修改成功");
                         alert("修改成功!");
                         window.location.reload();
@@ -209,9 +215,12 @@
                     "QID": QID,
                     "UIDans": UIDans,
                     "reason": reason,
-                },
+                }, 
                 success: function (result) {
-                    if (result.code == 200) { //修改成功
+                	if(result.description != null){
+                		alert(result.description);
+                	}
+                	else if (result.code == 200) { //修改成功
                         //layer.msg("修改成功");
                         alert("举报成功!");
                         $('#isReport').modal('hide');
@@ -240,10 +249,13 @@
                     "UIDco": UIDco,
                     "usernamrCo": usernamrCo,
                     "UIDans":[[${ question.UIDans }]],
-                    "content":content,
-                },
+                    "content":content,   
+                },  
                 success: function (result) {
-                    if (result.code == 200) { //修改成功
+                	if(result.description != null){
+                		alert(result.description);
+                	}
+                	else if (result.code == 200) { //修改成功
                         //layer.msg("修改成功");
                         alert("回复成功!");
                         window.location.reload();
@@ -257,6 +269,7 @@
                 }
             });
         }
+                 	
     </script>
 
 
